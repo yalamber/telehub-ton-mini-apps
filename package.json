@@ -12,13 +12,15 @@
   "dependencies": {
     "@telegram-apps/react-router-integration": "^1.0.0",
     "@telegram-apps/sdk-react": "^1.0.0",
-    "@telegram-apps/telegram-ui": "^2.1.5",
+    "@telegram-apps/telegram-ui": "^2.1.7",
     "@tonconnect/ui-react": "^2.0.5",
     "eruda": "^3.0.1",
+    "mongoose": "^8.5.2",
     "next": "14.2.4",
     "normalize.css": "^8.0.1",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-hook-form": "^7.52.2"
   },
   "devDependencies": {
     "@types/node": "^20",
