@@ -10,7 +10,7 @@ import {
 
 import {
   Section,
-  FormInput,
+  Input,
   Select,
   Placeholder,
 } from '@telegram-apps/telegram-ui';
@@ -54,12 +54,19 @@ export default function AddLinkPage() {
       mb.show();
       mb.on('click', () => {
         // TODO: submit
+        handleSubmit(onSubmit)();
       });
     }
   }, [mb]);
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
     console.log(data);
+    const res = await fetch('/api/submit-link', {
+      method: 'POST',
+      body: JSON.stringify({ ...data, initData }),
+    });
+    const resData = await res.json();
+    console.log(resData);
   };
 
   if (!initData) {
@@ -78,28 +85,87 @@ export default function AddLinkPage() {
   }
   return (
     <Section header="Channel/Group Details">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <FormInput
-          header="Link"
-          placeholder="t.me/name"
-          {...register('link', { required: true })}
-        />
-        <Select header="Country" {...register('country', { required: true })}>
-          <option>Nepal</option>
-          <option>USA</option>
-        </Select>
-        <Select header="City" {...register('city')}>
-          <option>Kathmandu</option>
-          <option>Biratnagar</option>
-        </Select>
-        <Select header="Language" {...register('language', { required: true })}>
-          <option>Nepali</option>
-          <option>English</option>
-        </Select>
-        <Select header="Category" {...register('category', { required: true })}>
-          <option>Fun</option>
-          <option>Cultural</option>
-        </Select>
+      <form onSubmit={handleSubmit(onSubmit)} className="mx-6 space-y-4 pb-10">
+        <div>
+          <label
+            htmlFor="link"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+          >
+            Link
+          </label>
+          <input
+            {...register('link')}
+            type="text"
+            id="link"
+            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:shadow-sm-light"
+            placeholder="t.me/link"
+            required
+          />
+        </div>
+        <div>
+          <label
+            htmlFor="category"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Category
+          </label>
+          <select
+            {...register('category')}
+            id="category"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+          >
+            <option>Select category</option>
+            <option value="test">Test</option>
+          </select>
+        </div>
+        <div>
+          <label
+            htmlFor="country"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Country
+          </label>
+          <select
+            {...register('country')}
+            id="country"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+          >
+            <option>Select country</option>
+            <option value="test">Test</option>
+          </select>
+        </div>
+        <div>
+          <label
+            htmlFor="city"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            City
+          </label>
+          <select
+            {...register('city')}
+            id="city"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+          >
+            <option>Select city</option>
+            <option value="test">Test</option>
+          </select>
+        </div>
+        <div>
+          <label
+            htmlFor="language"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Language
+          </label>
+          <select
+            {...register('language')}
+            id="language"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+          >
+            <option>Select Language</option>
+            <option value="test">Test</option>
+          </select>
+        </div>
       </form>
     </Section>
   );
