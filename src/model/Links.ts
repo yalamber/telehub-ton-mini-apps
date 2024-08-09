@@ -38,4 +38,4 @@ const LinkSchema = new mongoose.Schema<Links>({
   },
 });
 
-export default mongoose.models.Pet || mongoose.model<Links>('Link', LinkSchema);
+export default mongoose.models.Link || mongoose.model<Links>('Link', LinkSchema);
