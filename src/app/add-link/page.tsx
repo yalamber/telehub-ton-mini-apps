@@ -19,7 +19,7 @@ export default async function AddLinkPage() {
   const [categories, countries, languages] = await getData();
   return (
     <Section header="Channel/Group Details">
-      <AddForm categories={categories} countries={countries} languages={languages} />
+      <AddForm categories={JSON.parse(JSON.stringify(categories))} countries={JSON.parse(JSON.stringify(countries))} languages={JSON.parse(JSON.stringify(languages))} />
     </Section>
   );
 }
