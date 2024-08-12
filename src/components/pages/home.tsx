@@ -1,18 +1,18 @@
-"use client";
-import { useEffect, useState } from "react";
-import { useDebounce } from "@uidotdev/usehooks";
-import { useBackButton, useMainButton } from "@telegram-apps/sdk-react";
+'use client';
+import { useEffect, useState } from 'react';
+import { useDebounce } from '@uidotdev/usehooks';
+import { useBackButton, useMainButton } from '@telegram-apps/sdk-react';
 import {
   Section,
   FixedLayout,
   Avatar,
   Button,
   Cell,
-} from "@telegram-apps/telegram-ui";
-import { Icon28AddCircle } from "@telegram-apps/telegram-ui/dist/icons/28/add_circle";
-import FilterSelector from "@/components/FilterSelector/FilterSelector";
-import { Link } from "@/components/Link/Link";
-import { fetchCities } from "@/utils/helpers";
+} from '@telegram-apps/telegram-ui';
+import { Icon28AddCircle } from '@telegram-apps/telegram-ui/dist/icons/28/add_circle';
+import FilterSelector from '@/components/FilterSelector/FilterSelector';
+import { Link } from '@/components/Link/Link';
+import { fetchCities } from '@/utils/helpers';
 
 interface HomeProps {
   countries: Array<any>;
@@ -29,7 +29,7 @@ export default function Home({
 }: HomeProps) {
   const bb = useBackButton(true);
   const mb = useMainButton(true);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [filteredLinks, setFilteredLinks] = useState(links ?? []);
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
@@ -62,11 +62,11 @@ export default function Home({
 
   useEffect(() => {
     const queryParams = new URLSearchParams();
-    if (debouncedSearchTerm) queryParams.append("title", debouncedSearchTerm);
-    if (activeCategory) queryParams.append("category", activeCategory);
-    if (activeCountry) queryParams.append("country", activeCountry);
-    if (activeCity) queryParams.append("city", activeCity);
-    if (activeLanguage) queryParams.append("language", activeLanguage);
+    if (debouncedSearchTerm) queryParams.append('title', debouncedSearchTerm);
+    if (activeCategory) queryParams.append('category', activeCategory);
+    if (activeCountry) queryParams.append('country', activeCountry);
+    if (activeCity) queryParams.append('city', activeCity);
+    if (activeLanguage) queryParams.append('language', activeLanguage);
 
     const filterLinks = async () => {
       const response = await fetch(`/api/filter-links?${queryParams}`);
@@ -106,48 +106,47 @@ export default function Home({
             </Button>
           </Link>
         </div>
-        <div className="grid grid-flow-col space-x-2 m-4 justify-stretch">
+        <div className="grid grid-flow-col space-x-2 m-4 justify-stretch overflow-x-auto">
           <FilterSelector
             items={categories}
-            label={activeCategory ?? "Categories"}
+            label={activeCategory ?? 'Categories'}
             onChange={setActiveCategory}
           />
           <FilterSelector
             items={countries}
-            label={activeCountry ?? "Countries"}
+            label={activeCountry ?? 'Countries'}
             onChange={setActiveCountry}
           />
           <FilterSelector
             items={cities}
-            label={activeCity ?? "City"}
+            label={activeCity ?? 'City'}
             onChange={setActiveCity}
           />
           <FilterSelector
             items={languages}
-            label={activeLanguage ?? "Language"}
+            label={activeLanguage ?? 'Language'}
             onChange={setActiveLanguage}
           />
         </div>
       </FixedLayout>
       <Section className="mt-32">
         <Section header="#Channels">
-          {filteredLinks?.length > 0 && filteredLinks.map((item: any, index: number) => (
-            <Link key={`link-${index}`} href={`https://t.me/${item.link}`}>
-              <Cell
-                before={
-                  <Avatar
-                    size={40}
-                    src="https://avatars.githubusercontent.com/u/84640980?v=4"
-                  />
-                }
-              >
-                {item.title}
-              </Cell>
-            </Link>
-          ))}
-          {filteredLinks?.length === 0 && <Cell>
-               No Results
-              </Cell>}
+          {filteredLinks?.length > 0 &&
+            filteredLinks.map((item: any, index: number) => (
+              <Link key={`link-${index}`} href={`https://t.me/${item.link}`}>
+                <Cell
+                  before={
+                    <Avatar
+                      size={40}
+                      src="https://avatars.githubusercontent.com/u/84640980?v=4"
+                    />
+                  }
+                >
+                  {item.title}
+                </Cell>
+              </Link>
+            ))}
+          {filteredLinks?.length === 0 && <Cell>No Results</Cell>}
         </Section>
       </Section>
     </>
