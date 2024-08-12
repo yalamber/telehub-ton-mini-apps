@@ -1,15 +1,15 @@
-"use client";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+'use client';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   useLaunchParams,
   useBackButton,
   useMainButton,
   type User,
-} from "@telegram-apps/sdk-react";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { Input, Select, Placeholder } from "@telegram-apps/telegram-ui";
-import { fetchCities } from "@/utils/helpers";
+} from '@telegram-apps/sdk-react';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import { Input, Select, Placeholder } from '@telegram-apps/telegram-ui';
+import { fetchCities } from '@/utils/helpers';
 
 type Inputs = {
   link: string;
@@ -36,30 +36,33 @@ export default function AddForm({
     formState: { errors },
   } = useForm<Inputs>();
 
-  const [cities, setCities] = useState<Array<any>>([])
-
+  const [cities, setCities] = useState<Array<any>>([]);
+  const [formSubmitted, setFormSubmitted] = useState(false);
   const initDataRaw = useLaunchParams().initDataRaw;
   const bb = useBackButton(true);
   const mb = useMainButton(true);
   const router = useRouter();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    console.log("raw", initDataRaw);
-    const res = await fetch("/api/submit-link", {
-      method: "POST",
+    const res = await fetch('/api/submit-link', {
+      method: 'POST',
       headers: {
         Authorization: `tma ${initDataRaw}`,
       },
       body: JSON.stringify(data),
     });
     const resData = await res.json();
-    console.log(resData);
+    if (resData.status === 'ok') {
+      setFormSubmitted(true);
+    } else {
+      mb?.setText('Submit');
+    }
   };
 
   useEffect(() => {
     if (bb) {
       bb.show();
-      bb.on("click", () => {
+      bb.on('click', () => {
         // go back
         router.back();
       });
@@ -68,11 +71,12 @@ export default function AddForm({
 
   useEffect(() => {
     if (mb) {
-      mb.setText("Submit");
+      mb.setText('Submit');
       mb.enable();
       mb.show();
-      mb.on("click", () => {
-        document?.querySelector("form")?.requestSubmit();
+      mb.on('click', () => {
+        mb.setText('Submitting...');
+        document?.querySelector('form')?.requestSubmit();
       });
     }
   }, [mb]);
@@ -86,12 +90,25 @@ export default function AddForm({
         <img
           alt="Telegram sticker"
           src="https://xelene.me/telegram.gif"
-          style={{ display: "block", width: "144px", height: "144px" }}
+          style={{ display: 'block', width: '144px', height: '144px' }}
         />
       </Placeholder>
     );
   }
-
+  if (formSubmitted) {
+    return (
+      <Placeholder
+        header="Submitted"
+        description="Link submitted for review by the administrators"
+      >
+        <img
+          alt="Telegram sticker"
+          src="https://xelene.me/telegram.gif"
+          style={{ display: 'block', width: '144px', height: '144px' }}
+        />
+      </Placeholder>
+    );
+  }
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pb-10">
       <div>
@@ -101,7 +118,7 @@ export default function AddForm({
           render={({ field: { value, onChange } }) => (
             <Input
               header="Link"
-              defaultValue={value ?? ""}
+              defaultValue={value ?? ''}
               onChange={onChange}
               placeholder="t.me/link"
             />
@@ -116,12 +133,12 @@ export default function AddForm({
             render={({ field: { value, onChange } }) => (
               <Select
                 header="Country"
-                defaultValue={value ?? ""}
+                defaultValue={value ?? ''}
                 onChange={async (e) => {
-                    onChange(e.target.value)
-                    const country = e.target.value;
-                    const cities = await fetchCities(country);
-                    setCities(cities);
+                  onChange(e.target.value);
+                  const country = e.target.value;
+                  const cities = await fetchCities(country);
+                  setCities(cities);
                 }}
               >
                 <option value="">Select Country</option>
@@ -142,16 +159,16 @@ export default function AddForm({
           render={({ field: { value, onChange } }) => (
             <Select
               header="City"
-              defaultValue={value ?? ""}
+              defaultValue={value ?? ''}
               onChange={onChange}
               disabled={!cities?.length}
             >
               <option value="">Select City</option>
               {cities.map((item: any, index: number) => (
-                  <option key={`city-${index}`} value={item?.value}>
-                    {item?.label}
-                  </option>
-                ))}
+                <option key={`city-${index}`} value={item?.value}>
+                  {item?.label}
+                </option>
+              ))}
             </Select>
           )}
         />
@@ -164,7 +181,7 @@ export default function AddForm({
             render={({ field: { value, onChange } }) => (
               <Select
                 header="language"
-                defaultValue={value ?? ""}
+                defaultValue={value ?? ''}
                 onChange={onChange}
               >
                 <option value="">Select Language</option>
@@ -186,7 +203,7 @@ export default function AddForm({
             render={({ field: { value, onChange } }) => (
               <Select
                 header="Category"
-                defaultValue={value ?? ""}
+                defaultValue={value ?? ''}
                 onChange={onChange}
               >
                 <option value="">Select Category</option>
