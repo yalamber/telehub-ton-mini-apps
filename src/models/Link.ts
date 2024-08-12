@@ -1,12 +1,15 @@
 import mongoose from 'mongoose';
 
 export interface Links extends mongoose.Document {
-  link: string;
-  country: string;
-  city: string;
-  language: string;
-  category: string;
-  submittedBy: string;
+  link: String;
+  country: String;
+  city: String;
+  language: String;
+  category: String;
+  submittedBy: String;
+  memberCount: Number;
+  photo: String;
+  status: 'APPROVED' | 'PENDING' | 'NOT_APPROVED';
 }
 
 /* PetSchema will correspond to a collection in your MongoDB database. */
@@ -30,12 +33,23 @@ const LinkSchema = new mongoose.Schema<Links>({
   },
   category: {
     type: String,
-    required: [true, 'Please provide the category'],
   },
   submittedBy: {
     type: String,
     required: [true, 'Please provide who submitted'],
   },
+  memberCount: {
+    type: Number,
+  },
+  photo: {
+    type: String,
+  },
+  status: {
+    type: String,
+    enum: ['APPROVED', 'PENDING', 'NOT_APPROVED'],
+    default: 'PENDING',
+  },
 });
 
-export default mongoose.models.Link || mongoose.model<Links>('Link', LinkSchema);
+export default mongoose.models.Link ||
+  mongoose.model<Links>('Link', LinkSchema);

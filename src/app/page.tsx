@@ -36,6 +36,7 @@ export default function Home() {
         style={{
           padding: 0,
         }}
+        className='bg-slate-800'
       >
         <div className="flex m-4">
           <input
