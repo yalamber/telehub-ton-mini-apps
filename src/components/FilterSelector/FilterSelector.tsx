@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Modal,
   Button,
@@ -13,9 +14,12 @@ interface FilterProps {
   label: string;
   onChange: (value: string) => void;
 }
+
 const FilterSelector = ({ items, label = 'select', onChange }: FilterProps) => {
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <Modal
+      open={isOpen}
       header={
         <Modal.Header
           after={
@@ -30,14 +34,21 @@ const FilterSelector = ({ items, label = 'select', onChange }: FilterProps) => {
         </Modal.Header>
       }
       trigger={
-        <Button size="m" mode="outline">
+        <Button size="m" mode="outline" onClick={() => setIsOpen(true)}>
           {label}
         </Button>
       }
     >
       <div className="m-2 px-5">
         {items.map((item) => (
-          <List key={item.value} onClick={() => onChange(item.value)}>
+          <List
+            key={item.value}
+            className="cursor-pointer"
+            onClick={() => {
+              onChange(item.value);
+              setIsOpen(false);
+            }}
+          >
             <Navigation>{item.label}</Navigation>
             <Divider />
           </List>

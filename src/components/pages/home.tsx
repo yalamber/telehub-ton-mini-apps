@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { useDebounce } from "@uidotdev/usehooks";
 import { useBackButton, useMainButton } from '@telegram-apps/sdk-react';
 import {
   Section,
@@ -22,6 +23,8 @@ interface HomeProps {
 export default function Home({ countries, languages, categories }: HomeProps) {
   const bb = useBackButton(true);
   const mb = useMainButton(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [activeCountry, setActiveCountry] = useState<string | null>(null);
   const [activeLanguage, setActiveLanguage] = useState<string | null>(null);
@@ -44,6 +47,7 @@ export default function Home({ countries, languages, categories }: HomeProps) {
     // TODO: query cities of specific country with api
     // setCities(data);
   }, [activeCountry]);
+  
 
   return (
     <>
@@ -69,23 +73,23 @@ export default function Home({ countries, languages, categories }: HomeProps) {
         <div className="grid grid-flow-col space-x-2 m-4 justify-stretch">
           <FilterSelector
             items={categories}
-            label="Categories"
+            label={activeCategory ?? 'Categories'}
             onChange={setActiveCategory}
           />
           <FilterSelector
             items={countries}
-            label="Countries"
+            label={activeCountry ?? 'Countries'}
             onChange={setActiveCountry}
           />
           <FilterSelector
             items={cities}
-            label="City"
+            label={activeCity ?? 'City'}
             onChange={setActiveCity}
           />
           <FilterSelector
             items={languages}
-            label="Language"
-            onChange={setActiveCountry}
+            label={activeLanguage ?? 'Language'}
+            onChange={setActiveLanguage}
           />
         </div>
       </FixedLayout>
