@@ -37,7 +37,6 @@ export async function getChannelDetails(name: string, tgSession: string) {
       })
     );
     memberCount = (fullInfo?.chats?.[0] as any)?.participantsCount;
-    title = (fullInfo?.chats?.[0] as any)?.title;
   }
   const details = {
     title: (entity as any).title,
