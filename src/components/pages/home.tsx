@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { useDebounce } from "@uidotdev/usehooks";
+import { useDebounce } from '@uidotdev/usehooks';
 import { useBackButton, useMainButton } from '@telegram-apps/sdk-react';
 import {
   Section,
@@ -18,12 +18,19 @@ interface HomeProps {
   countries: Array<any>;
   languages: Array<any>;
   categories: Array<any>;
+  links: Array<any>;
 }
 
-export default function Home({ countries, languages, categories }: HomeProps) {
+export default function Home({
+  countries,
+  languages,
+  categories,
+  links,
+}: HomeProps) {
   const bb = useBackButton(true);
   const mb = useMainButton(true);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredLinks, setFilteredLinks] = useState(links ?? []);
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [activeCountry, setActiveCountry] = useState<string | null>(null);
@@ -47,8 +54,16 @@ export default function Home({ countries, languages, categories }: HomeProps) {
     // TODO: query cities of specific country with api
     // setCities(data);
   }, [activeCountry]);
-  
 
+  useEffect(() => {
+    // TODO: Query Links and update links
+  }, [
+    debouncedSearchTerm,
+    activeCategory,
+    activeCountry,
+    activeCity,
+    activeLanguage,
+  ]);
   return (
     <>
       <FixedLayout
@@ -94,83 +109,21 @@ export default function Home({ countries, languages, categories }: HomeProps) {
         </div>
       </FixedLayout>
       <Section className="mt-32">
-        <Section header="Trending this week">
-          <Link href="https://t.me/yolo1ce">
-            <Cell
-              before={
-                <Avatar
-                  size={40}
-                  src="https://avatars.githubusercontent.com/u/84640980?v=4"
-                />
-              }
-            >
-              Channel 1
-            </Cell>
-          </Link>
-          <Link href="https://t.me/yolo1ce">
-            <Cell
-              before={
-                <Avatar
-                  size={40}
-                  src="https://avatars.githubusercontent.com/u/84640980?v=4"
-                />
-              }
-            >
-              Channel 2
-            </Cell>
-          </Link>
-
-          <Link href="https://t.me/yolo1ce">
-            <Cell
-              before={
-                <Avatar
-                  size={40}
-                  src="https://avatars.githubusercontent.com/u/84640980?v=4"
-                />
-              }
-            >
-              Channel 3
-            </Cell>
-          </Link>
-        </Section>
-        <Section header="New">
-          <Link href="https://t.me/yolo1ce">
-            <Cell
-              before={
-                <Avatar
-                  size={40}
-                  src="https://avatars.githubusercontent.com/u/84640980?v=4"
-                />
-              }
-            >
-              Channel 1
-            </Cell>
-          </Link>
-
-          <Link href="https://t.me/yolo1ce">
-            <Cell
-              before={
-                <Avatar
-                  size={40}
-                  src="https://avatars.githubusercontent.com/u/84640980?v=4"
-                />
-              }
-            >
-              Channel 2
-            </Cell>
-          </Link>
-          <Link href="https://t.me/yolo1ce">
-            <Cell
-              before={
-                <Avatar
-                  size={40}
-                  src="https://avatars.githubusercontent.com/u/84640980?v=4"
-                />
-              }
-            >
-              Channel 3
-            </Cell>
-          </Link>
+        <Section header="Link header text here">
+          {filteredLinks.map((item: any) => (
+            <Link href={`https://t.me/${item.link}`}>
+              <Cell
+                before={
+                  <Avatar
+                    size={40}
+                    src="https://avatars.githubusercontent.com/u/84640980?v=4"
+                  />
+                }
+              >
+                {item.title}
+              </Cell>
+            </Link>
+          ))}
         </Section>
       </Section>
     </>

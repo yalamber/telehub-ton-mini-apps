@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 
 export interface Link extends mongoose.Document {
   link: String;
+  title: String;
   country: String;
   city: String;
   language: String;
@@ -16,6 +17,10 @@ export interface Link extends mongoose.Document {
 const LinkSchema = new mongoose.Schema<Link>({
   link: {
     unique: true,
+    type: String,
+    required: [true, 'Please provide a link.'],
+  },
+  title: {
     type: String,
     required: [true, 'Please provide a link.'],
   },
