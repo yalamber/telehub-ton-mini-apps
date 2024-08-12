@@ -6,11 +6,27 @@ import {
 } from '@telegram-apps/init-data-node';
 import { z } from 'zod';
 import TelegramBot from 'node-telegram-bot-api';
-import { put } from "@vercel/blob";
 import { getChannelDetails } from '@/utils/telegram';
 import connectMongo from '@/utils/dbConnect';
 import Link from '@/models/Link';
 
+function extractUsername(link: string): string | null {
+  // Regex to capture the username from different variations of Telegram links
+  const match = link.match(
+    /(?:https?:\/\/)?(?:t\.me|telegram\.me)\/([a-zA-Z0-9_]{5,32})/
+  );
+
+  if (match) {
+    return match[1]; // Return the captured username
+  }
+
+  // If the input is already a plain username
+  if (/^[a-zA-Z0-9_]{5,32}$/.test(link)) {
+    return link;
+  }
+
+  return null; // Return null if no valid username found
+}
 const LinkZod = z.object({
   link: z
     .string()
@@ -55,7 +71,7 @@ export async function POST(request: Request) {
         );
         await Link.create({
           title: channelData.title,
-          link: reqBody.link,
+          link: extractUsername(reqBody.link),
           category: reqBody.category,
           country: reqBody.country,
           city: reqBody.city,
