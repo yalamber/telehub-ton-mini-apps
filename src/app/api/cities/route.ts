@@ -11,12 +11,10 @@ export async function GET(request: NextRequest) {
             { status: 400 }
         );
     }
-    const data = await FilterOption.find({
-        parent: country
-    });
+    const data = await FilterOption.find({parent: country}).lean();
 
     return Response.json(
-        { status: 'success', country: country, data: data },
+        { status: 'success', data: data },
         { status: 200 }
     );
 }
