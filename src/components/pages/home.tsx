@@ -134,14 +134,7 @@ export default function Home({
           {filteredLinks?.length > 0 &&
             filteredLinks.map((item: any, index: number) => (
               <Link key={`link-${index}`} href={`https://t.me/${item.link}`}>
-                <Cell
-                  before={
-                    <Avatar
-                      size={40}
-                      src="https://avatars.githubusercontent.com/u/84640980?v=4"
-                    />
-                  }
-                >
+                <Cell before={<Avatar size={40} src={item.photo} />}>
                   {item.title}
                 </Cell>
               </Link>
