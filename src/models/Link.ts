@@ -6,7 +6,7 @@ export interface Links extends mongoose.Document {
   city: String;
   language: String;
   category: String;
-  submittedBy: String;
+  submittedById: Number;
   memberCount: Number;
   photo: String;
   status: 'APPROVED' | 'PENDING' | 'NOT_APPROVED';
@@ -34,8 +34,8 @@ const LinkSchema = new mongoose.Schema<Links>({
   category: {
     type: String,
   },
-  submittedBy: {
-    type: String,
+  submittedById: {
+    type: Number,
     required: [true, 'Please provide who submitted'],
   },
   memberCount: {

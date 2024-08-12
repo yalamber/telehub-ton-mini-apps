@@ -58,9 +58,10 @@ export async function POST(request: Request) {
           country: reqBody.country,
           city: reqBody.city,
           language: reqBody.language,
-          memberCount: channelData.memberCount,
+          memberCount: channelData?.memberCount,
           photo: channelData.photo,
           submittedBy: initData?.user?.username,
+          submittedById: initData?.user?.id,
         });
         console.log('sending message to ', initData?.user?.username);
         await bot.sendMessage(

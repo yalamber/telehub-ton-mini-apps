@@ -27,7 +27,7 @@ export async function getChannelDetails(name: string, tgSession: string) {
         channel: entity,
       })
     );
-    memberCount = fullInfo.fullChat.participantsCount;
+    memberCount = (fullInfo?.fullChat as any)?.participantsCount;
   } else if (entity instanceof Api.Chat) {
     // For small groups
     fullInfo = await client.invoke(
@@ -35,7 +35,7 @@ export async function getChannelDetails(name: string, tgSession: string) {
         chatId: entity.id,
       })
     );
-    memberCount = fullInfo.chats[0].participantsCount;
+    memberCount = (fullInfo?.chats?.[0] as any)?.participantsCount;
   }
   const details = {
     isChannel: entity instanceof Api.Channel,
@@ -44,7 +44,7 @@ export async function getChannelDetails(name: string, tgSession: string) {
     memberCount: memberCount || 0,
     photo: '',
   };
-  if (entity.photo instanceof Api.ChatPhoto) {
+  if ((entity as any)?.photo instanceof Api.ChatPhoto) {
     const photo = await client.downloadProfilePhoto(entity);
     // save photo to s3
     // TODO set s3 link
