@@ -12,14 +12,16 @@ async function getData() {
   return [categories, countries, languages, links];
 }
 
+export const revalidate = 120;
+
 export default async function Home() {
   const [categories, countries, languages, links] = await getData();
   return (
     <HomePage
-      links={links}
-      categories={categories}
-      countries={countries}
-      languages={languages}
+      links={JSON.parse(JSON.stringify(links))}
+      categories={JSON.parse(JSON.stringify(categories))}
+      countries={JSON.parse(JSON.stringify(countries))}
+      languages={JSON.parse(JSON.stringify(languages))}
     />
   );
 }

@@ -23,9 +23,9 @@ const FilterSelector = ({ items, label = 'select', onChange }: FilterProps) => {
       header={
         <Modal.Header
           after={
-            <Modal.Close>
+            <button onClick={() => setIsOpen(false)}>
               <Icon28Close style={{ color: 'var(--tgui--plain_foreground)' }} />
-            </Modal.Close>
+            </button>
           }
         >
           <Placeholder description="Description" header="Title">
@@ -33,6 +33,9 @@ const FilterSelector = ({ items, label = 'select', onChange }: FilterProps) => {
           </Placeholder>
         </Modal.Header>
       }
+      onOpenChange={(open) => {
+        setIsOpen(open);
+      }}
       trigger={
         <Button size="m" mode="outline" onClick={() => setIsOpen(true)}>
           {label}
