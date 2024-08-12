@@ -9,6 +9,7 @@ import {
 } from "@telegram-apps/sdk-react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { Input, Select, Placeholder } from "@telegram-apps/telegram-ui";
+import { fetchCities } from "@/utils/helpers";
 
 type Inputs = {
   link: string;
@@ -119,9 +120,7 @@ export default function AddForm({
                 onChange={async (e) => {
                     onChange(e.target.value)
                     const country = e.target.value;
-                    const response = await fetch(`https://127.0.0.1:3000/api/cities?country=${country}`);
-                    const resData = await response.json();
-                    const cities = resData?.data;
+                    const cities = await fetchCities(country);
                     setCities(cities);
                 }}
               >

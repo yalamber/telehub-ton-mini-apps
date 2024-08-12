@@ -49,7 +49,6 @@ export async function POST(request: Request) {
         LinkZod.parse(reqBody);
         const bot = new TelegramBot(process.env.TG_TOKEN, { polling: false });
         // Add link to database by querying telegram link data chatId
-        console.log("reqBody.link", reqBody.link)
         const channelData = await getChannelDetails(
           reqBody.link,
           process.env.TG_SESSION
@@ -57,6 +56,7 @@ export async function POST(request: Request) {
         await Link.create({
           title: channelData.title,
           link: reqBody.link,
+          title: reqBody.link,
           category: reqBody.category,
           country: reqBody.country,
           city: reqBody.city,
