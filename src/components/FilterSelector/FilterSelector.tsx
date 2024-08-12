@@ -11,8 +11,9 @@ import { Icon28Close } from '@telegram-apps/telegram-ui/dist/icons/28/close';
 interface FilterProps {
   items: Array<{ label: string; value: string }>;
   label: string;
+  onChange: (value: string) => void;
 }
-const FilterSelector = ({ items, label = 'select' }: FilterProps) => {
+const FilterSelector = ({ items, label = 'select', onChange }: FilterProps) => {
   return (
     <Modal
       header={
@@ -36,7 +37,7 @@ const FilterSelector = ({ items, label = 'select' }: FilterProps) => {
     >
       <div className="m-2 px-5">
         {items.map((item) => (
-          <List key={item.value}>
+          <List key={item.value} onClick={() => onChange(item.value)}>
             <Navigation>{item.label}</Navigation>
             <Divider />
           </List>

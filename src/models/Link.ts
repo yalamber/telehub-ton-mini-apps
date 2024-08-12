@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-export interface Links extends mongoose.Document {
+export interface Link extends mongoose.Document {
   link: String;
   country: String;
   city: String;
@@ -13,11 +13,11 @@ export interface Links extends mongoose.Document {
 }
 
 /* PetSchema will correspond to a collection in your MongoDB database. */
-const LinkSchema = new mongoose.Schema<Links>({
+const LinkSchema = new mongoose.Schema<Link>({
   link: {
+    unique: true,
     type: String,
     required: [true, 'Please provide a link.'],
-    // maxlength: [60, "link cannot be more than 60 characters"],
   },
   country: {
     type: String,
@@ -51,5 +51,4 @@ const LinkSchema = new mongoose.Schema<Links>({
   },
 });
 
-export default mongoose.models.Link ||
-  mongoose.model<Links>('Link', LinkSchema);
+export default mongoose.models.Link || mongoose.model<Link>('Link', LinkSchema);

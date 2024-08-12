@@ -1,12 +1,23 @@
 import mongoose from 'mongoose';
 
-export interface FilterOptions extends mongoose.Document {
+export interface FilterOption extends mongoose.Document {
+  type: 'COUNTRY' | 'CITY' | 'LANGUAGE' | 'CATEGORY';
   label: string;
   value: string;
+  parent: string;
 }
 
 /* PetSchema will correspond to a collection in your MongoDB database. */
-const FilterOptionSchena = new mongoose.Schema<FilterOptions>({
+const FilterOptionSchema = new mongoose.Schema<FilterOption>({
+  type: {
+    index: true,
+    type: String,
+    enum: ['COUNTRY', 'CITY', 'LANGUAGE', 'CATEGORY'],
+    required: [true, 'Please provide a type.'],
+  },
+  parent: {
+    type: String,
+  },
   label: {
     type: String,
     required: [true, 'Please provide a label.'],
@@ -18,4 +29,4 @@ const FilterOptionSchena = new mongoose.Schema<FilterOptions>({
 });
 
 export default mongoose.models.FilterOption ||
-  mongoose.model<FilterOptions>('FilterOptions', FilterOptionSchena);
+  mongoose.model<FilterOption>('FilterOption', FilterOptionSchema);

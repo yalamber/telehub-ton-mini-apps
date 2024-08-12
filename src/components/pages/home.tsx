@@ -1,5 +1,5 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useBackButton, useMainButton } from '@telegram-apps/sdk-react';
 import {
   Section,
@@ -9,14 +9,25 @@ import {
   Cell,
 } from '@telegram-apps/telegram-ui';
 import { Icon28AddCircle } from '@telegram-apps/telegram-ui/dist/icons/28/add_circle';
-
 import FilterSelector from '@/components/FilterSelector/FilterSelector';
 
 import { Link } from '@/components/Link/Link';
 
-export default function Home() {
+interface HomeProps {
+  countries: Array<any>;
+  languages: Array<any>;
+  categories: Array<any>;
+}
+
+export default function Home({ countries, languages, categories }: HomeProps) {
   const bb = useBackButton(true);
   const mb = useMainButton(true);
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [activeCountry, setActiveCountry] = useState<string | null>(null);
+  const [activeLanguage, setActiveLanguage] = useState<string | null>(null);
+  const [activeCity, setActiveCity] = useState<string | null>(null);
+  const [cities, setCities] = useState([]);
+
   useEffect(() => {
     if (bb) {
       bb.hide();
@@ -28,6 +39,11 @@ export default function Home() {
       mb.hide();
     }
   }, [mb]);
+
+  useEffect(() => {
+    // TODO: query cities of specific country with api
+    // setCities(data);
+  }, [activeCountry]);
 
   return (
     <>
@@ -52,23 +68,24 @@ export default function Home() {
         </div>
         <div className="grid grid-flow-col space-x-2 m-4 justify-stretch">
           <FilterSelector
-            items={[
-              { label: 'Fun', value: 'fun' },
-              { label: 'Culture', value: 'culture' },
-            ]}
+            items={categories}
             label="Categories"
+            onChange={setActiveCategory}
           />
           <FilterSelector
-            items={[{ label: 'Nepal', value: 'NP' }]}
+            items={countries}
             label="Countries"
+            onChange={setActiveCountry}
           />
           <FilterSelector
-            items={[{ label: 'Nepal', value: 'NP' }]}
+            items={cities}
             label="City"
+            onChange={setActiveCity}
           />
           <FilterSelector
-            items={[{ label: 'Nepal', value: 'NP' }]}
+            items={languages}
             label="Language"
+            onChange={setActiveCountry}
           />
         </div>
       </FixedLayout>
