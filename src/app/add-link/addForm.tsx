@@ -1,0 +1,206 @@
+"use client";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  useLaunchParams,
+  useBackButton,
+  useMainButton,
+  type User,
+} from "@telegram-apps/sdk-react";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { Input, Select, Placeholder } from "@telegram-apps/telegram-ui";
+
+type Inputs = {
+  link: string;
+  country: string;
+  city: string;
+  category: string;
+  language: string;
+};
+
+interface AddFormProps {
+  countries: Array<any>;
+  languages: Array<any>;
+  categories: Array<any>;
+}
+
+export default function AddForm({
+  countries,
+  languages,
+  categories,
+}: AddFormProps) {
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<Inputs>();
+
+  const [cities, setCities] = useState<Array<any>>([])
+
+  const initDataRaw = useLaunchParams().initDataRaw;
+  const bb = useBackButton(true);
+  const mb = useMainButton(true);
+  const router = useRouter();
+
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    console.log("raw", initDataRaw);
+    const res = await fetch("/api/submit-link", {
+      method: "POST",
+      headers: {
+        Authorization: `tma ${initDataRaw}`,
+      },
+      body: JSON.stringify(data),
+    });
+    const resData = await res.json();
+    console.log(resData);
+  };
+
+  useEffect(() => {
+    if (bb) {
+      bb.show();
+      bb.on("click", () => {
+        // go back
+        router.back();
+      });
+    }
+  }, [bb, router]);
+
+  useEffect(() => {
+    if (mb) {
+      mb.setText("Submit");
+      mb.enable();
+      mb.show();
+      mb.on("click", () => {
+        document?.querySelector("form")?.requestSubmit();
+      });
+    }
+  }, [mb]);
+
+  if (!initDataRaw) {
+    return (
+      <Placeholder
+        header="Oops"
+        description="Application was launched with missing init data"
+      >
+        <img
+          alt="Telegram sticker"
+          src="https://xelene.me/telegram.gif"
+          style={{ display: "block", width: "144px", height: "144px" }}
+        />
+      </Placeholder>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pb-10">
+      <div>
+        <Controller
+          name="link"
+          control={control}
+          render={({ field: { value, onChange } }) => (
+            <Input
+              header="Link"
+              defaultValue={value ?? ""}
+              onChange={onChange}
+              placeholder="t.me/link"
+            />
+          )}
+        />
+      </div>
+      {countries?.length > 0 && (
+        <div>
+          <Controller
+            name="country"
+            control={control}
+            render={({ field: { value, onChange } }) => (
+              <Select
+                header="Country"
+                defaultValue={value ?? ""}
+                onChange={async (e) => {
+                    onChange(e.target.value)
+                    const country = e.target.value;
+                    const response = await fetch(`https://127.0.0.1:3000/api/cities?country=${country}`);
+                    const resData = await response.json();
+                    const cities = resData?.data;
+                    setCities(cities);
+                }}
+              >
+                <option value="">Select Country</option>
+                {countries.map((item: any, index: number) => (
+                  <option key={`country-${index}`} value={item?.value}>
+                    {item?.label}
+                  </option>
+                ))}
+              </Select>
+            )}
+          />
+        </div>
+      )}
+      <div>
+        <Controller
+          name="city"
+          control={control}
+          render={({ field: { value, onChange } }) => (
+            <Select
+              header="City"
+              defaultValue={value ?? ""}
+              onChange={onChange}
+              disabled={!cities?.length}
+            >
+              <option value="">Select City</option>
+              {cities.map((item: any, index: number) => (
+                  <option key={`city-${index}`} value={item?.value}>
+                    {item?.label}
+                  </option>
+                ))}
+            </Select>
+          )}
+        />
+      </div>
+      {languages?.length > 0 && (
+        <div>
+          <Controller
+            name="language"
+            control={control}
+            render={({ field: { value, onChange } }) => (
+              <Select
+                header="language"
+                defaultValue={value ?? ""}
+                onChange={onChange}
+              >
+                <option value="">Select Language</option>
+                {languages.map((item: any, index: number) => (
+                  <option key={`language-${index}`} value={item?.value}>
+                    {item?.label}
+                  </option>
+                ))}
+              </Select>
+            )}
+          />
+        </div>
+      )}
+      {categories?.length > 0 && (
+        <div>
+          <Controller
+            name="category"
+            control={control}
+            render={({ field: { value, onChange } }) => (
+              <Select
+                header="Category"
+                defaultValue={value ?? ""}
+                onChange={onChange}
+              >
+                <option value="">Select Category</option>
+                {categories.map((item: any, index: number) => (
+                  <option key={`category-${index}`} value={item?.value}>
+                    {item?.label}
+                  </option>
+                ))}
+              </Select>
+            )}
+          />
+        </div>
+      )}
+    </form>
+  );
+}
