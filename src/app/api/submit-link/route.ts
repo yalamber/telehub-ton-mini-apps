@@ -64,7 +64,7 @@ export async function POST(request: Request) {
         });
         console.log('sending message to ', initData?.user?.username);
         await bot.sendMessage(
-          initData?.user?.id as string,
+          initData?.user?.id as number,
           `Thank you for submitting your link ${reqBody.link}.` +
             `\ncountry: ${reqBody.country}` +
             `\ncity: ${reqBody.city}` +
