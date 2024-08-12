@@ -22,7 +22,7 @@ const LinkSchema = new mongoose.Schema<Link>({
   },
   title: {
     type: String,
-    required: [true, 'Please provide a link.'],
+    required: [true, 'Please provide a title.'],
   },
   country: {
     type: String,

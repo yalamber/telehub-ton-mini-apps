@@ -34,7 +34,7 @@ const FilterSelector = ({ items, label = 'select', onChange }: FilterProps) => {
         </Modal.Header>
       }
       trigger={
-        <Button size="m" mode="outline" onClick={() => setIsOpen(true)}>
+        <Button size="m" mode="outline" onClick={() => setIsOpen(items?.length > 0 ? true : false)}>
           {label}
         </Button>
       }
