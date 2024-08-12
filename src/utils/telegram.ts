@@ -1,4 +1,5 @@
 import { Api, TelegramClient } from 'telegram';
+import { put } from '@vercel/blob';
 import { StringSession } from 'telegram/sessions/index.js';
 
 export async function getChannelDetails(name: string, tgSession: string) {
@@ -20,7 +21,6 @@ export async function getChannelDetails(name: string, tgSession: string) {
   const entity = await client.getEntity(name);
   let fullInfo;
   let memberCount;
-  let title;
   if (entity instanceof Api.Channel) {
     // For channels and super groups
     fullInfo = await client.invoke(
@@ -53,7 +53,10 @@ export async function getChannelDetails(name: string, tgSession: string) {
     // save photo to s3
     console.log((entity as any)?.photo, photo);
     // TODO set s3 link
-    details.photo = 'S3 link here';
+    const { url } = await put(`link-img/${name}.jpg`, photo, {
+      access: 'public',
+    });
+    details.photo = url;
   }
   return details;
 }
