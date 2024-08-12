@@ -6,6 +6,7 @@ import {
 } from '@telegram-apps/init-data-node';
 import { z } from 'zod';
 import TelegramBot from 'node-telegram-bot-api';
+import { put } from "@vercel/blob";
 import { getChannelDetails } from '@/utils/telegram';
 import connectMongo from '@/utils/dbConnect';
 import Link from '@/models/Link';
@@ -53,6 +54,7 @@ export async function POST(request: Request) {
           process.env.TG_SESSION
         );
         await Link.create({
+          title: channelData.title,
           link: reqBody.link,
           category: reqBody.category,
           country: reqBody.country,

@@ -20,6 +20,7 @@ export async function getChannelDetails(name: string, tgSession: string) {
   const entity = await client.getEntity(name);
   let fullInfo;
   let memberCount;
+  let title;
   if (entity instanceof Api.Channel) {
     // For channels and super groups
     fullInfo = await client.invoke(
@@ -36,8 +37,10 @@ export async function getChannelDetails(name: string, tgSession: string) {
       })
     );
     memberCount = (fullInfo?.chats?.[0] as any)?.participantsCount;
+    title = (fullInfo?.chats?.[0] as any)?.title;
   }
   const details = {
+    title: (entity as any).title,
     isChannel: entity instanceof Api.Channel,
     isGroup: entity instanceof Api.Chat,
     isSupergroup: entity instanceof Api.Channel && entity.megagroup,
@@ -45,8 +48,10 @@ export async function getChannelDetails(name: string, tgSession: string) {
     photo: '',
   };
   if ((entity as any)?.photo instanceof Api.ChatPhoto) {
+    console.log('Get Photo', (entity as any)?.photo);
     const photo = await client.downloadProfilePhoto(entity);
     // save photo to s3
+    console.log((entity as any)?.photo, photo);
     // TODO set s3 link
     details.photo = 'S3 link here';
   }
