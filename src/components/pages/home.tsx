@@ -69,7 +69,7 @@ export default function Home({
     if (activeLanguage) queryParams.append("language", activeLanguage);
 
     const filterLinks = async () => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/filter-links?${queryParams}`);
+      const response = await fetch(`/api/filter-links?${queryParams}`);
       const resData = await response.json();
       const links = resData?.data;
       setFilteredLinks(links);
