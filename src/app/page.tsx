@@ -7,7 +7,7 @@ async function getData() {
   const categories = await FilterOption.find({ type: 'CATEGORY' }).lean();
   const countries = await FilterOption.find({ type: 'COUNTRY' }).lean();
   const languages = await FilterOption.find({ type: 'LANGUAGE' }).lean();
-  // TODO: query default links
+  // TODO: query default links lists
   const links: any = [];
   return [categories, countries, languages, links];
 }
