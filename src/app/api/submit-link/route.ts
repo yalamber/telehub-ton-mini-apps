@@ -56,7 +56,6 @@ export async function POST(request: Request) {
         await Link.create({
           title: channelData.title,
           link: reqBody.link,
-          title: reqBody.link,
           category: reqBody.category,
           country: reqBody.country,
           city: reqBody.city,
