@@ -52,10 +52,12 @@ export async function getChannelDetails(name: string, tgSession: string) {
     // save photo to s3
     console.log((entity as any)?.photo, photo);
     // TODO set s3 link
-    const { url } = await put(`link-img/${name}.jpg`, photo, {
-      access: 'public',
-    });
-    details.photo = url;
+    if (photo) {
+      const { url } = await put(`link-img/${name}.jpg`, photo, {
+        access: 'public',
+      });
+      details.photo = url;
+    }
   }
   return details;
 }
