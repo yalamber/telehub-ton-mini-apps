@@ -78,6 +78,7 @@ export default function Home({
             type="text"
             className="p-2 mr-2 flex-grow rounded bg-transparent border border-blue-400"
             placeholder="Search"
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
           <Link href="/add-link">
             <Button mode="filled" before={<Icon28AddCircle />}>
