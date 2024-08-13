@@ -13,9 +13,15 @@ interface FilterProps {
   items: Array<{ label: string; value: string }>;
   label: string;
   onChange: (value: string) => void;
+  disabled?: boolean;
 }
 
-const FilterSelector = ({ items, label = 'select', onChange }: FilterProps) => {
+const FilterSelector = ({
+  items,
+  label = 'select',
+  disabled = false,
+  onChange,
+}: FilterProps) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <Modal
@@ -37,7 +43,12 @@ const FilterSelector = ({ items, label = 'select', onChange }: FilterProps) => {
         setIsOpen(open);
       }}
       trigger={
-        <Button size="m" mode="outline" onClick={() => setIsOpen(items?.length > 0 ? true : false)}>
+        <Button
+          disabled={disabled}
+          size="m"
+          mode="bezeled"
+          onClick={() => setIsOpen(items?.length > 0 ? true : false)}
+        >
           {label}
         </Button>
       }

@@ -91,12 +91,12 @@ export default function Home({
         style={{
           padding: 0,
         }}
-        className="bg-slate-800"
+        className="bg-slate-900 z-10"
       >
         <div className="flex m-4">
           <input
             type="text"
-            className="p-2 mr-2 flex-grow rounded bg-transparent border border-blue-400"
+            className="p-2 mr-2 flex-grow rounded-xl bg-transparent border border-blue-400"
             placeholder="Search"
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -118,6 +118,7 @@ export default function Home({
             onChange={setActiveCountry}
           />
           <FilterSelector
+            disabled={!activeCountry}
             items={cities}
             label={activeCity ?? 'City'}
             onChange={setActiveCity}
@@ -134,7 +135,15 @@ export default function Home({
           {filteredLinks?.length > 0 &&
             filteredLinks.map((item: any, index: number) => (
               <Link key={`link-${index}`} href={`https://t.me/${item.link}`}>
-                <Cell before={<Avatar size={40} src={item.photo} />}>
+                <Cell
+                  before={
+                    <Avatar
+                      size={40}
+                      src={item.photo ?? ''}
+                      acronym={item.title.slice(0, 1)}
+                    />
+                  }
+                >
                   {item.title}
                 </Cell>
               </Link>
