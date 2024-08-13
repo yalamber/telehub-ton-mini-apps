@@ -147,7 +147,7 @@ export default function Home({
             {filteredLinks?.length > 0 && (
               <ul className="max-w-md divide-y divide-gray-200 dark:divide-gray-700">
                 {filteredLinks.map((item: any, index: number) => (
-                  <li className="py-3 sm:pb-4">
+                  <li key={`new-link-${index}`} className="py-3 sm:pb-4">
                     <Link
                       key={`link-${index}`}
                       href={`tg://resolve?domain=${item.link}`}
