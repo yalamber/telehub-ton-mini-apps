@@ -9,7 +9,12 @@ import {
   usePopup,
 } from '@telegram-apps/sdk-react';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
-import { Input, Select, Placeholder } from '@telegram-apps/telegram-ui';
+import {
+  Input,
+  Spinner,
+  Select,
+  Placeholder,
+} from '@telegram-apps/telegram-ui';
 import { fetchCities } from '@/utils/helpers';
 
 type Inputs = {
@@ -38,13 +43,14 @@ export default function AddForm({
   } = useForm<Inputs>();
 
   const [cities, setCities] = useState<Array<any>>([]);
+  const [citiesLoading, setCitiesLoading] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const initDataRaw = useLaunchParams().initDataRaw;
   const bb = useBackButton(true);
   const mb = useMainButton(true);
   const router = useRouter();
   const popup = usePopup();
-  
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const res = await fetch('/api/submit-link', {
       method: 'POST',
@@ -144,8 +150,10 @@ export default function AddForm({
                 onChange={async (e) => {
                   onChange(e.target.value);
                   const country = e.target.value;
+                  setCitiesLoading(true);
                   const cities = await fetchCities(country);
                   setCities(cities);
+                  setCitiesLoading(false);
                 }}
               >
                 <option value="">Select Country</option>
@@ -159,7 +167,10 @@ export default function AddForm({
           />
         </div>
       )}
-      <div>
+      <div className="relative">
+        {citiesLoading && (
+          <Spinner size="s" className="absolute z-10 left-10 top-10" />
+        )}
         <Controller
           name="city"
           control={control}
