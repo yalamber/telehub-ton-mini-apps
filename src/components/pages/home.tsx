@@ -1,7 +1,12 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useDebounce } from '@uidotdev/usehooks';
-import { useBackButton, useMainButton } from '@telegram-apps/sdk-react';
+import {
+  useBackButton,
+  useMainButton,
+  useViewport,
+} from '@telegram-apps/sdk-react';
+
 import {
   Section,
   FixedLayout,
@@ -37,6 +42,7 @@ export default function Home({
   const [activeLanguage, setActiveLanguage] = useState<string | null>(null);
   const [activeCity, setActiveCity] = useState<string | null>(null);
   const [cities, setCities] = useState<Array<any>>([]);
+  const vp = useViewport();
 
   useEffect(() => {
     if (bb) {
@@ -83,6 +89,12 @@ export default function Home({
     activeCity,
     activeLanguage,
   ]);
+
+  useEffect(() => {
+    if (vp?.expand) {
+      vp?.expand();
+    }
+  }, [vp]);
 
   return (
     <>
