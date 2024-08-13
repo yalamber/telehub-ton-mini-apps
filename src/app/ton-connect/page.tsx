@@ -13,8 +13,6 @@ import {
   Title,
 } from '@telegram-apps/telegram-ui';
 
-import { DisplayData } from '@/components/DisplayData/DisplayData';
-
 import './styles.css';
 
 export default function TONConnectPage() {
@@ -24,14 +22,15 @@ export default function TONConnectPage() {
   if (!wallet) {
     return (
       <Placeholder
-        className='ton-connect-page__placeholder'
-        header='TON Connect'
+        className="ton-connect-page__placeholder"
+        header="TON Connect"
         description={
           <>
             <Text>
-              To display the data related to the TON Connect, it is required to connect your wallet
+              To display the data related to the TON Connect, it is required to
+              connect your wallet
             </Text>
-            <TonConnectButton className='ton-connect-page__button'/>
+            <TonConnectButton className="ton-connect-page__button" />
           </>
         }
       />
@@ -40,13 +39,7 @@ export default function TONConnectPage() {
 
   const {
     account: { chain, publicKey, address },
-    device: {
-      appName,
-      appVersion,
-      maxProtocolVersion,
-      platform,
-      features,
-    },
+    device: { appName, appVersion, maxProtocolVersion, platform, features },
   } = wallet;
 
   return (
@@ -56,7 +49,12 @@ export default function TONConnectPage() {
           <Section>
             <Cell
               before={
-                <Avatar src={wallet.imageUrl} alt='Provider logo' width={60} height={60}/>
+                <Avatar
+                  src={wallet.imageUrl}
+                  alt="Provider logo"
+                  width={60}
+                  height={60}
+                />
               }
               after={<Navigation>About wallet</Navigation>}
               subtitle={wallet.appName}
@@ -65,13 +63,13 @@ export default function TONConnectPage() {
                 utils.openLink(wallet.aboutUrl);
               }}
             >
-              <Title level='3'>{wallet.name}</Title>
+              <Title level="3">{wallet.name}</Title>
             </Cell>
           </Section>
-          <TonConnectButton className='ton-connect-page__button-connected'/>
+          <TonConnectButton className="ton-connect-page__button-connected" />
         </>
       )}
-      <DisplayData
+      {/* <DisplayData
         header='Account'
         rows={[
           { title: 'Address', value: address },
@@ -94,7 +92,7 @@ export default function TONConnectPage() {
               .join(', '),
           },
         ]}
-      />
+      /> */}
     </List>
   );
-};
+}
