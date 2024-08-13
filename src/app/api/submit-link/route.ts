@@ -34,16 +34,18 @@ const LinkZod = z.object({
       (value) =>
         /^(https?:\/\/)?(t\.me|telegram\.me)\/[a-zA-Z0-9_]{5,32}$/.test(
           value
-        ) || /^[a-zA-Z0-9_]{5,32}$/.test(value),
+        ) ||
+        /^[a-zA-Z0-9_]{5,32}$/.test(value) ||
+        /^@[a-zA-Z0-9_]{5,32}$/.test(value),
       {
         message:
           'Invalid Telegram link or username. It should be a valid URL or a username with 5-32 characters.',
       }
     ),
   country: z.string(),
-  city: z.string(),
+  city: z.string().optional(),
   language: z.string(),
-  category: z.string().optional(),
+  category: z.string(),
 });
 
 export async function POST(request: Request) {
@@ -74,7 +76,7 @@ export async function POST(request: Request) {
           link: extractUsername(reqBody.link),
           category: reqBody.category,
           country: reqBody.country,
-          city: reqBody.city,
+          city: reqBody.city ?? '',
           language: reqBody.language,
           memberCount: channelData?.memberCount,
           photo: channelData.photo,

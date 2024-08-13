@@ -1,3 +1,3 @@
 export default function AdminPage() {
-  return <>test</>;
+  return <>Welcome to Admin Panel</>;
 }

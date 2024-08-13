@@ -17,6 +17,8 @@
     "@telegram-apps/react-router-integration": "^1.0.0",
     "@telegram-apps/sdk-react": "^1.0.0",
     "@telegram-apps/telegram-ui": "^2.1.7",
+    "@telegram-auth/react": "^1.0.3",
+    "@telegram-auth/server": "^1.0.4",
     "@tonconnect/ui-react": "^2.0.5",
     "@uidotdev/usehooks": "^2.4.1",
     "@vercel/blob": "^0.23.4",

@@ -23,6 +23,12 @@ dependencies:
   '@telegram-apps/telegram-ui':
     specifier: ^2.1.7
     version: 2.1.7(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+  '@telegram-auth/react':
+    specifier: ^1.0.3
+    version: 1.0.3(react@18.3.1)
+  '@telegram-auth/server':
+    specifier: ^1.0.4
+    version: 1.0.4
   '@tonconnect/ui-react':
     specifier: ^2.0.5
     version: 2.0.6(react-dom@18.3.1)(react@18.3.1)
@@ -914,6 +920,18 @@ packages:
     transitivePeerDependencies:
       - '@types/react'
       - '@types/react-dom'
+    dev: false
+
+  /@telegram-auth/react@1.0.3(react@18.3.1):
+    resolution: {integrity: sha512-p8wXqaAuP5fH/p5+F8OHdmS9C3FZefVY6+NSdjGn7vd9+7oTdflXcLgA+SrO/KW+k4jY+qxgGbEG19Lyz/G0yA==}
+    peerDependencies:
+      react: '>=18'
+    dependencies:
+      react: 18.3.1
+    dev: false
+
+  /@telegram-auth/server@1.0.4:
+    resolution: {integrity: sha512-A0JysRmNhGnq8JZKoWx7KwEWTnHPI6GmSp7lzKWPanP//agFF/EBkOpnKcMhsvSlikYFRZKfNo+OvFX9zDEU4w==}
     dev: false
 
   /@tonconnect/isomorphic-eventsource@0.0.2:
