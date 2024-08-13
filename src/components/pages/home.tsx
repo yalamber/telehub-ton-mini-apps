@@ -112,10 +112,8 @@ export default function Home({
             placeholder="Search"
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <Link href="/add-link">
-            <Button mode="filled" before={<Icon28AddCircle />}>
-              Add Link
-            </Button>
+          <Link href="/add-link" className="self-center">
+            <Icon28AddCircle />
           </Link>
         </div>
         <div className="grid grid-flow-col space-x-2 m-4 justify-stretch overflow-x-auto">
