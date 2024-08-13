@@ -30,7 +30,6 @@ const LinkSchema = new mongoose.Schema<Link>({
   },
   city: {
     type: String,
-    required: [true, 'Please provide the city'],
   },
   language: {
     type: String,
@@ -38,6 +37,7 @@ const LinkSchema = new mongoose.Schema<Link>({
   },
   category: {
     type: String,
+    required: [true, 'Please provide the city'],
   },
   submittedById: {
     type: Number,

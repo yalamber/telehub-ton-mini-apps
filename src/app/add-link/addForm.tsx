@@ -1,11 +1,12 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+
 import {
   useLaunchParams,
   useBackButton,
   useMainButton,
-  type User,
+  usePopup,
 } from '@telegram-apps/sdk-react';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { Input, Select, Placeholder } from '@telegram-apps/telegram-ui';
@@ -42,7 +43,7 @@ export default function AddForm({
   const bb = useBackButton(true);
   const mb = useMainButton(true);
   const router = useRouter();
-
+  const popup = usePopup();
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const res = await fetch('/api/submit-link', {
       method: 'POST',
@@ -54,7 +55,12 @@ export default function AddForm({
     const resData = await res.json();
     if (resData.status === 'ok') {
       setFormSubmitted(true);
+      mb?.hide();
     } else {
+      popup.open({
+        title: 'Error!',
+        message: 'Something Went wrong!',
+      });
       mb?.setText('Submit');
     }
   };
