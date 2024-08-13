@@ -145,7 +145,10 @@ export default function Home({
         <Section header="#Channels">
           {filteredLinks?.length > 0 &&
             filteredLinks.map((item: any, index: number) => (
-              <Link key={`link-${index}`} href={`https://t.me/${item.link}`}>
+              <Link
+                key={`link-${index}`}
+                href={`tg://resolve?domain=${item.link}`}
+              >
                 <Cell
                   before={
                     <Avatar

@@ -44,6 +44,7 @@ export default function AddForm({
   const mb = useMainButton(true);
   const router = useRouter();
   const popup = usePopup();
+  
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const res = await fetch('/api/submit-link', {
       method: 'POST',

@@ -12,7 +12,7 @@ import { Icon28Close } from '@telegram-apps/telegram-ui/dist/icons/28/close';
 interface FilterProps {
   items: Array<{ label: string; value: string }>;
   label: string;
-  onChange: (value: string) => void;
+  onChange: (value: string | null) => void;
   disabled?: boolean;
 }
 
@@ -30,7 +30,12 @@ const FilterSelector = ({
       header={
         <Modal.Header
           after={
-            <button onClick={() => setIsOpen(false)}>
+            <button
+              onClick={() => {
+                onChange(null);
+                setIsOpen(false);
+              }}
+            >
               <Icon28Close style={{ color: 'var(--tgui--plain_foreground)' }} />
             </button>
           }
