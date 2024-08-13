@@ -25,6 +25,7 @@ const FilterSelector = ({
   const [isOpen, setIsOpen] = useState(false);
   return (
     <Modal
+      className="z-20"
       open={isOpen}
       header={
         <Modal.Header
@@ -63,7 +64,7 @@ const FilterSelector = ({
               setIsOpen(false);
             }}
           >
-            <Navigation>{item.label}</Navigation>
+            <Navigation className="pt-2">{item.label}</Navigation>
             <Divider />
           </List>
         ))}

@@ -28,5 +28,6 @@ const FilterOptionSchema = new mongoose.Schema<FilterOption>({
   },
 });
 
+FilterOptionSchema.index({ type: 1, value: 1 }, { unique: true });
 export default mongoose.models.FilterOption ||
   mongoose.model<FilterOption>('FilterOption', FilterOptionSchema);

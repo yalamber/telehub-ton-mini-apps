@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "tg:login": "node --experimental-strip-types --env-file=.env.local ./src/scripts/telegram_login.ts"
+    "tg:login": "node --experimental-strip-types --env-file=.env.local ./src/scripts/telegram_login.ts",
+    "import:cats": "node --experimental-strip-types --env-file=.env.local ./src/scripts/sync-categories.ts"
   },
   "dependencies": {
     "@inquirer/prompts": "^5.3.8",
