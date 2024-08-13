@@ -61,6 +61,7 @@ export default function Home({
       if (activeCountry) {
         const data = await fetchCities(activeCountry);
         setCities(data);
+        setActiveCity(null);
       }
     };
     fetchAndSetCities();
