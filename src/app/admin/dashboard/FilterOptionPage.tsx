@@ -1,5 +1,6 @@
 'use client';
 import { useCallback, useEffect, useState } from 'react';
+import Link from 'next/link';
 
 export default function FilterOptionsPage({
   type,
@@ -78,12 +79,19 @@ export default function FilterOptionsPage({
                         {item.label}
                       </td>
                       <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-gray-400">
-                        {item.value}
+                        {item.value}{' '}
                       </td>
                       <td className="p-4 whitespace-nowrap">
                         <span className="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-md dark:bg-gray-700 dark:text-green-400 border border-green-100 dark:border-green-500">
                           {item.status ?? 'PENDING'}
                         </span>
+                        {type === 'COUNTRY' && (
+                          <Link
+                            href={`/admin/dashboard/cities?parent=${item.value}`}
+                          >
+                            [View Cities]
+                          </Link>
+                        )}
                       </td>
                     </tr>
                   ))}

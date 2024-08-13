@@ -1,6 +1,17 @@
 import FilterOptionsPage from '../FilterOptionPage';
 
-export default function AdminPage() {
-  // TODO get parent country from query params
-  return <FilterOptionsPage title="Cities" type="CITY" parent="" />;
+export default function AdminPage({
+  searchParams,
+}: {
+  searchParams?: {
+    parent?: string;
+  };
+}) {
+  return (
+    <FilterOptionsPage
+      title="Cities"
+      type="CITY"
+      parent={searchParams?.parent}
+    />
+  );
 }
