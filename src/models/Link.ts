@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 export interface Link extends mongoose.Document {
   link: String;
   title: String;
+  about: String;
   country: String;
   city: String;
   language: String;
@@ -10,6 +11,7 @@ export interface Link extends mongoose.Document {
   submittedById: Number;
   memberCount: Number;
   photo: String;
+  type: 'CHANNEL' | 'GROUP';
   status: 'APPROVED' | 'PENDING' | 'NOT_APPROVED';
 }
 
@@ -19,6 +21,13 @@ const LinkSchema = new mongoose.Schema<Link>({
     unique: true,
     type: String,
     required: [true, 'Please provide a link.'],
+  },
+  type: {
+    type: String,
+    enum: ['CHANNEL', 'GROUP'],
+  },
+  about: {
+    type: String,
   },
   title: {
     type: String,

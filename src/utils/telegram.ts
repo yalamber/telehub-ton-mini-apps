@@ -21,6 +21,7 @@ export async function getChannelDetails(name: string, tgSession: string) {
   const entity = await client.getEntity(name);
   let fullInfo;
   let memberCount;
+  let type;
   if (entity instanceof Api.Channel) {
     // For channels and super groups
     fullInfo = await client.invoke(
@@ -29,6 +30,7 @@ export async function getChannelDetails(name: string, tgSession: string) {
       })
     );
     memberCount = (fullInfo?.fullChat as any)?.participantsCount;
+    type = 'CHANNEL';
   } else if (entity instanceof Api.Chat) {
     // For small groups
     fullInfo = await client.invoke(
@@ -37,6 +39,7 @@ export async function getChannelDetails(name: string, tgSession: string) {
       })
     );
     memberCount = (fullInfo?.chats?.[0] as any)?.participantsCount;
+    type = 'GROUP';
   }
   const details = {
     title: (entity as any).title,
@@ -45,6 +48,7 @@ export async function getChannelDetails(name: string, tgSession: string) {
     isSupergroup: entity instanceof Api.Channel && entity.megagroup,
     memberCount: memberCount || 0,
     photo: '',
+    type
   };
   if ((entity as any)?.photo instanceof Api.ChatPhoto) {
     console.log('Get Photo', (entity as any)?.photo);

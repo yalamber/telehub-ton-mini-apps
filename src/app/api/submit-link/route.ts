@@ -73,6 +73,8 @@ export async function POST(request: Request) {
         );
         await Link.create({
           title: channelData.title,
+          // about: channelData.about,
+          type: channelData.type,
           link: extractUsername(reqBody.link),
           category: reqBody.category,
           country: reqBody.country,

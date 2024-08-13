@@ -142,27 +142,45 @@ export default function Home({
         </div>
       </FixedLayout>
       <Section className="mt-32">
-        <Section header="#Channels">
-          {filteredLinks?.length > 0 &&
-            filteredLinks.map((item: any, index: number) => (
-              <Link
-                key={`link-${index}`}
-                href={`tg://resolve?domain=${item.link}`}
-              >
-                <Cell
-                  before={
-                    <Avatar
-                      size={40}
-                      src={item.photo ?? ''}
-                      acronym={item.title.slice(0, 1)}
-                    />
-                  }
-                >
-                  {item.title}
-                </Cell>
-              </Link>
-            ))}
-          {filteredLinks?.length === 0 && <Cell>No Results</Cell>}
+        <Section header="New">
+          <div className="px-5">
+            {filteredLinks?.length > 0 && (
+              <ul className="max-w-md divide-y divide-gray-200 dark:divide-gray-700">
+                {filteredLinks.map((item: any, index: number) => (
+                  <li className="py-3 sm:pb-4">
+                    <Link
+                      key={`link-${index}`}
+                      href={`tg://resolve?domain=${item.link}`}
+                    >
+                      <div className="flex items-center space-x-4 rtl:space-x-reverse">
+                        <div className="flex-shrink-0">
+                          <Avatar
+                            size={40}
+                            src={item.photo ?? ''}
+                            acronym={item.title.slice(0, 1)}
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+                            {item.title}
+                          </p>
+                          <p className="text-sm text-gray-500 truncate dark:text-gray-400">
+                            {item.memberCount} members
+                          </p>
+                        </div>
+                        <div className="inline-flex items-center text-base text-gray-900 dark:text-white">
+                          <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">
+                            Group
+                          </span>
+                        </div>
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {filteredLinks?.length === 0 && <Cell>No Results</Cell>}
+          </div>
         </Section>
       </Section>
     </>
