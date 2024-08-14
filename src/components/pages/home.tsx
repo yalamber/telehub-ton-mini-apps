@@ -5,6 +5,7 @@ import {
   useBackButton,
   useMainButton,
   useViewport,
+  useUtils,
 } from '@telegram-apps/sdk-react';
 
 import { Section, FixedLayout, Avatar, Cell } from '@telegram-apps/telegram-ui';
@@ -29,6 +30,7 @@ export default function Home({
   const bb = useBackButton(true);
   const mb = useMainButton(true);
   const vp = useViewport();
+  const utils = useUtils();
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredLinks, setFilteredLinks] = useState(links ?? []);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
@@ -146,7 +148,11 @@ export default function Home({
                   <li key={`new-link-${index}`} className="py-3 sm:pb-4">
                     <a
                       key={`link-${index}`}
-                      href={`tg://resolve?domain=${item.link}`}
+                      href={`https://t.me/${item.link}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        utils.openTelegramLink(`https://t.me/${item.link}`);
+                      }}
                     >
                       <div className="flex items-center space-x-4 rtl:space-x-reverse">
                         <div className="flex-shrink-0">

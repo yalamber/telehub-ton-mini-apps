@@ -13,7 +13,7 @@ declare module 'next-auth' {
   }
 }
 
-const ADMIN_USERS = [7108516313, 1279815786];
+const ADMIN_USERS = ['7108516313', '1279815786', '1253120502'];
 
 const authOptions: NextAuthOptions = {
   providers: [
@@ -25,20 +25,20 @@ const authOptions: NextAuthOptions = {
         const validator = new AuthDataValidator({
           botToken: `${process.env.TG_TOKEN}`,
         });
-
         const data = objectToAuthDataMap(req.query || {});
         const user = await validator.validate(data);
-        console.log('user ======>', user);
-        if (user.id && user.first_name) {
-          if (ADMIN_USERS.includes(user.id)) {
-            const returned = {
-              id: user.id.toString(),
-              email: user.id.toString(),
-              name: [user.first_name, user.last_name || ''].join(' '),
-              image: user.photo_url,
-            };
-            return returned;
-          }
+        if (
+          user.id &&
+          user.first_name &&
+          ADMIN_USERS.includes(user.id.toString())
+        ) {
+          const returned = {
+            id: user.id.toString(),
+            email: user.id.toString(),
+            name: [user.first_name, user.last_name || ''].join(' '),
+            image: user.photo_url,
+          };
+          return returned;
         }
         return null;
       },
@@ -51,8 +51,8 @@ const authOptions: NextAuthOptions = {
     },
   },
   pages: {
-    signIn: '/auth/signin',
-    error: '/auth/error',
+    signIn: '/admin',
+    error: '/error',
   },
 };
 
