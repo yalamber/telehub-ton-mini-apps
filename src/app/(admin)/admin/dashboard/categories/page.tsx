@@ -1,5 +1,7 @@
+import { checkAuthSessionRedirect } from '@/app/(admin)/admin/check-auth';
 import FilterOptionsPage from '../FilterOptionPage';
 
-export default function AdminPage() {
-  return <FilterOptionsPage title="Categories" type="CATEGORY"  />;
+export default async function AdminPage() {
+  await checkAuthSessionRedirect(true, '/admin');
+  return <FilterOptionsPage title="Categories" type="CATEGORY" />;
 }
