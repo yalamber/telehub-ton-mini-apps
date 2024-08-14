@@ -12,5 +12,6 @@ namespace NodeJS {
     KV_REST_API_TOKEN: string;
     KV_REST_API_URL: string;
     KV_URL: string;
+    TG_BOT_USERNAME: string;
   }
 }
