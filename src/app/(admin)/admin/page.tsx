@@ -11,8 +11,8 @@ export default function AdminPage() {
         >
           <span>TELEHUB</span>
         </a>
-        <div className="w-full max-w-xl p-6 space-y-8 sm:p-8 bg-white rounded-lg shadow dark:bg-gray-800">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+        <div className="w-full max-w-xl p-6 space-y-8 sm:p-8 bg-white rounded-lg shadow dark:bg-gray-800 text-center flex items-center flex-col">
+          <h2 className="font-bold text-gray-900 dark:text-white">
             Sign in to manage
           </h2>
           <LoginButton
