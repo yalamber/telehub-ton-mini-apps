@@ -131,7 +131,8 @@ export async function GET(request: NextRequest) {
     // TODO add index to status
     query.status = status;
   }
-  console.log("query", query)
+
+
   const data = await Link.find(query).lean();
 
   return Response.json({ status: 'success', data }, { status: 200 });
