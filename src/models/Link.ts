@@ -13,6 +13,7 @@ export interface Link extends mongoose.Document {
   photo: String;
   type: 'CHANNEL' | 'GROUP';
   status: 'APPROVED' | 'PENDING' | 'NOT_APPROVED';
+  featuredType: 'TRENDING' | 'NEW';
 }
 
 /* PetSchema will correspond to a collection in your MongoDB database. */
@@ -62,6 +63,11 @@ const LinkSchema = new mongoose.Schema<Link>({
     type: String,
     enum: ['APPROVED', 'PENDING', 'NOT_APPROVED'],
     default: 'PENDING',
+  },
+  featuredType: {
+    type: String,
+    enum: ['TRENDING', 'NEW'],
+    default: 'NEW',
   },
 });
 

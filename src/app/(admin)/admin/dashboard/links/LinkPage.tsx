@@ -1,9 +1,9 @@
-'use client';
-import { useCallback, useEffect, useState } from 'react';
-import Link from 'next/link';
+"use client";
+import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
 
 function LinkRow({ item }: { item: any }) {
-  const updateStatus = (e) => {
+  const updateStatus = (e: any) => {
     console.log(e.target.value);
   };
   return (
@@ -42,19 +42,30 @@ function LinkRow({ item }: { item: any }) {
         </td>
         <td className="p-4 whitespace-nowrap">
           <select onChange={updateStatus} className="rounded p-1">
-            <option value="PENDING" selected={item.status === 'PENDING'}>
+            <option value="PENDING" selected={item.status === "PENDING"}>
               PENDING
             </option>
-            <option value="APPROVED" selected={item.status === 'APPROVED'}>
+            <option value="APPROVED" selected={item.status === "APPROVED"}>
               APPROVED
             </option>
             <option
               value="NOT_APPROVED"
-              selected={item.status === 'NOT_APPROVED'}
+              selected={item.status === "NOT_APPROVED"}
             >
               NOT APPROVED
             </option>
             <option value="DELETE">DELETE</option>
+          </select>
+        </td>
+        <td className="p-4 whitespace-nowrap">
+          <select onChange={updateStatus} className="rounded p-1">
+            <option value="">SELECT TYPE</option>
+            <option value="TRENDING" selected={item.featuredType === "TRENDING"}>
+              TRENDING
+            </option>
+            <option value="NEW" selected={item.featuredType === "NEW"}>
+              NEW
+            </option>
           </select>
         </td>
       </tr>
@@ -65,12 +76,12 @@ function LinkRow({ item }: { item: any }) {
 export default function AdminPage() {
   const [links, setLinks] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [filterStatus, setFilterStatus] = useState('PENDING');
+  const [filterStatus, setFilterStatus] = useState("PENDING");
 
   const fetchLinks = useCallback((filterStatus: string) => {
     (async () => {
       setLoading(true);
-      let url = '/api/links';
+      let url = "/api/links";
       if (filterStatus) {
         url += `?status=${filterStatus}`;
       }
@@ -155,6 +166,12 @@ export default function AdminPage() {
                     >
                       Status
                     </th>
+                    <th
+                      scope="col"
+                      className="p-4 text-xs font-medium tracking-wider text-left text-gray-500 uppercase dark:text-white"
+                    >
+                      Featured Type
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800">
@@ -163,7 +180,7 @@ export default function AdminPage() {
                   ))}
                 </tbody>
               </table>
-              {loading && 'Loading...'}
+              {loading && "Loading..."}
             </div>
           </div>
         </div>
