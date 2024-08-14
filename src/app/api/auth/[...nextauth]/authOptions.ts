@@ -13,6 +13,8 @@ declare module 'next-auth' {
   }
 }
 
+const ADMIN_USERS = [7108516313, 1279815786];
+
 const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -28,20 +30,15 @@ const authOptions: NextAuthOptions = {
         const user = await validator.validate(data);
         console.log('user ======>', user);
         if (user.id && user.first_name) {
-          const returned = {
-            id: user.id.toString(),
-            email: user.id.toString(),
-            name: [user.first_name, user.last_name || ''].join(' '),
-            image: user.photo_url,
-          };
-
-          try {
-            // TODO create or update user in database
-          } catch {
-            console.log('Something went wrong while creating the user.');
+          if (ADMIN_USERS.includes(user.id)) {
+            const returned = {
+              id: user.id.toString(),
+              email: user.id.toString(),
+              name: [user.first_name, user.last_name || ''].join(' '),
+              image: user.photo_url,
+            };
+            return returned;
           }
-
-          return returned;
         }
         return null;
       },

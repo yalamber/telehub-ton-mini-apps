@@ -144,7 +144,7 @@ export default function Home({
               <ul className="max-w-md divide-y divide-gray-200 dark:divide-gray-700">
                 {filteredLinks.map((item: any, index: number) => (
                   <li key={`new-link-${index}`} className="py-3 sm:pb-4">
-                    <Link
+                    <a
                       key={`link-${index}`}
                       href={`tg://resolve?domain=${item.link}`}
                     >
@@ -170,7 +170,7 @@ export default function Home({
                           </span>
                         </div>
                       </div>
-                    </Link>
+                    </a>
                   </li>
                 ))}
               </ul>
