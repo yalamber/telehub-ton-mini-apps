@@ -52,7 +52,7 @@ export default function AddForm({
   const popup = usePopup();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    const res = await fetch('/api/submit-link', {
+    const res = await fetch('/api/link', {
       method: 'POST',
       headers: {
         Authorization: `tma ${initDataRaw}`,

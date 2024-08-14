@@ -65,3 +65,21 @@ export async function getChannelDetails(name: string, tgSession: string) {
   }
   return details;
 }
+
+export function extractUsername(link: string): string | null {
+  // Regex to capture the username from different variations of Telegram links
+  const match = link.match(
+    /(?:https?:\/\/)?(?:t\.me|telegram\.me)\/([a-zA-Z0-9_]{5,32})/
+  );
+
+  if (match) {
+    return match[1]; // Return the captured username
+  }
+
+  // If the input is already a plain username
+  if (/^[a-zA-Z0-9_]{5,32}$/.test(link)) {
+    return link;
+  }
+
+  return null; // Return null if no valid username found
+}

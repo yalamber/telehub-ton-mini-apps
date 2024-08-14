@@ -1,4 +1,6 @@
 import { headers } from 'next/headers';
+import { NextRequest } from 'next/server';
+import { getServerSession } from 'next-auth';
 import {
   validate,
   parse,
@@ -6,27 +8,11 @@ import {
 } from '@telegram-apps/init-data-node';
 import { z } from 'zod';
 import TelegramBot from 'node-telegram-bot-api';
-import { getChannelDetails } from '@/utils/telegram';
 import connectMongo from '@/utils/dbConnect';
+import authOptions from '@/app/api/auth/[...nextauth]/authOptions';
 import Link from '@/models/Link';
+import { getChannelDetails, extractUsername } from '@/utils/telegram';
 
-function extractUsername(link: string): string | null {
-  // Regex to capture the username from different variations of Telegram links
-  const match = link.match(
-    /(?:https?:\/\/)?(?:t\.me|telegram\.me)\/([a-zA-Z0-9_]{5,32})/
-  );
-
-  if (match) {
-    return match[1]; // Return the captured username
-  }
-
-  // If the input is already a plain username
-  if (/^[a-zA-Z0-9_]{5,32}$/.test(link)) {
-    return link;
-  }
-
-  return null; // Return null if no valid username found
-}
 const LinkZod = z.object({
   link: z
     .string()
@@ -117,3 +103,35 @@ export async function POST(request: Request) {
       );
   }
 }
+
+export async function GET(request: NextRequest) {
+  await connectMongo();
+  const session = await getServerSession(authOptions);
+  const { searchParams } = request.nextUrl;
+  const query: Record<string, string | { $regex: string; $options: string }> =
+    {};
+
+  const title = searchParams.get('title');
+  const category = searchParams.get('category');
+  const country = searchParams.get('country');
+  const city = searchParams.get('city');
+  const language = searchParams.get('language');
+  const status = searchParams.get('status');
+  // TODO: add full text searching using mongoose
+  if (title) query.title = { $regex: title, $options: 'i' };
+  if (category) query.category = category;
+  if (country) query.country = country;
+  if (city) query.city = city;
+  if (language) query.language = language;
+  // allow filter by status to only logged in users
+  if (session && status) {
+    // TODO: allow filter by status
+    // TODO add index to status
+    query.status = status;
+  }
+
+  const data = await Link.find(query).lean();
+
+  return Response.json({ status: 'success', data }, { status: 200 });
+}
+

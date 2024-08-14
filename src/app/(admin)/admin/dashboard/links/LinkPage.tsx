@@ -2,14 +2,79 @@
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 
+function LinkRow({ item }: { item: any }) {
+  const updateStatus = (e) => {
+    console.log(e.target.value);
+  };
+  return (
+    <>
+      <tr>
+        <td className="p-4 text-sm font-normal text-gray-900 whitespace-nowrap dark:text-white">
+          <Link href={`https://t.me/${item.link}`} className=" flex gap-2">
+            {item.photo && (
+              <img
+                className="w-10 h-10 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
+                src={item.photo}
+                alt="avatar"
+              ></img>
+            )}
+            {!item.photo && (
+              <div className="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
+                <span className="font-medium text-gray-600 dark:text-gray-300">
+                  {item.title.slice(0, 1)}
+                </span>
+              </div>
+            )}
+            {item.link}
+          </Link>
+        </td>
+        <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-gray-400">
+          {item.country}
+        </td>
+        <td className="p-4 text-sm font-semibold text-gray-900 whitespace-nowrap dark:text-white">
+          {item.city}
+        </td>
+        <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-gray-400">
+          {item.language}
+        </td>
+        <td className="inline-flex items-center p-4 space-x-2 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-gray-400">
+          {item.category}
+        </td>
+        <td className="p-4 whitespace-nowrap">
+          <select onChange={updateStatus} className="rounded p-1">
+            <option value="PENDING" selected={item.status === 'PENDING'}>
+              PENDING
+            </option>
+            <option value="APPROVED" selected={item.status === 'APPROVED'}>
+              APPROVED
+            </option>
+            <option
+              value="NOT_APPROVED"
+              selected={item.status === 'NOT_APPROVED'}
+            >
+              NOT APPROVED
+            </option>
+            <option value="DELETE">DELETE</option>
+          </select>
+        </td>
+      </tr>
+    </>
+  );
+}
+
 export default function AdminPage() {
   const [links, setLinks] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [filterStatus, setFilterStatus] = useState('PENDING');
 
-  const fetchLinks = useCallback(() => {
+  const fetchLinks = useCallback((filterStatus: string) => {
     (async () => {
       setLoading(true);
-      const response = await fetch(`/api/filter-links`);
+      let url = '/api/links';
+      if (filterStatus) {
+        url += `?status=${filterStatus}`;
+      }
+      const response = await fetch(url);
       const resData = await response.json();
       const links = resData?.data;
       setLinks(links);
@@ -18,8 +83,8 @@ export default function AdminPage() {
   }, []);
 
   useEffect(() => {
-    fetchLinks();
-  }, [fetchLinks]);
+    fetchLinks(filterStatus);
+  }, [fetchLinks, filterStatus]);
 
   return (
     <div className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 sm:p-6 dark:bg-gray-800">
@@ -32,8 +97,19 @@ export default function AdminPage() {
             This is a list of all submitted link
           </span>
         </div>
-        <div className="items-center sm:flex">
-          <div className="flex items-center"></div>
+        <div className="items-center sm:flex ">
+          <span className="text-white">Filter by: &nbsp;</span>
+          <select
+            onChange={(e) => {
+              setFilterStatus(e.target.value);
+            }}
+            className="rounded p-1"
+          >
+            <option value="">Status</option>
+            <option value="PENDING">PENDING</option>
+            <option value="APPROVED">APPROVED</option>
+            <option value="NOT_APPROVED">NOT APPROVED</option>
+          </select>
         </div>
       </div>
       <div className="flex flex-col mt-6">
@@ -83,47 +159,7 @@ export default function AdminPage() {
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800">
                   {links.map((item: any) => (
-                    <tr key={`link-${item.id}`}>
-                      <td className="p-4 text-sm font-normal text-gray-900 whitespace-nowrap dark:text-white">
-                        <Link
-                          href={`https://t.me/${item.link}`}
-                          className=" flex gap-2"
-                        >
-                          {item.photo && (
-                            <img
-                              className="w-10 h-10 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
-                              src={item.photo}
-                              alt="avatar"
-                            ></img>
-                          )}
-                          {!item.photo && (
-                            <div className="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
-                              <span className="font-medium text-gray-600 dark:text-gray-300">
-                                {item.title.slice(0, 1)}
-                              </span>
-                            </div>
-                          )}
-                          {item.link}
-                        </Link>
-                      </td>
-                      <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-gray-400">
-                        {item.country}
-                      </td>
-                      <td className="p-4 text-sm font-semibold text-gray-900 whitespace-nowrap dark:text-white">
-                        {item.city}
-                      </td>
-                      <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-gray-400">
-                        {item.language}
-                      </td>
-                      <td className="inline-flex items-center p-4 space-x-2 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-gray-400">
-                        {item.category}
-                      </td>
-                      <td className="p-4 whitespace-nowrap">
-                        <span className="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-md dark:bg-gray-700 dark:text-green-400 border border-green-100 dark:border-green-500">
-                          {item.status}
-                        </span>
-                      </td>
-                    </tr>
+                    <LinkRow key={`link-${item._id}`} item={item} />
                   ))}
                 </tbody>
               </table>

@@ -1,6 +1,10 @@
 export const fetchCities = async (country: string) => {
-    const response = await fetch(`/api/cities?country=${country}`);
-    const resData = await response.json();
-    const cities = resData?.data;
-    return cities;
-}
+  let url = `/api/filter-options?type=CITY`;
+  if (country) {
+    url += `&parent=${country}`;
+  }
+  const response = await fetch(url);
+  const resData = await response.json();
+  const cities = resData?.data;
+  return cities;
+};

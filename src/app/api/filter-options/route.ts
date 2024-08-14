@@ -20,3 +20,9 @@ export async function GET(request: NextRequest) {
 
   return Response.json({ status: 'success', data: data }, { status: 200 });
 }
+
+export async function POST(request: NextRequest) {
+  await connectMongo();
+
+  return Response.json({ status: 'success' }, { status: 200 });
+}
