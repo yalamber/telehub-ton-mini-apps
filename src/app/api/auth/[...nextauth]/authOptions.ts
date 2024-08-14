@@ -51,8 +51,8 @@ const authOptions: NextAuthOptions = {
     },
   },
   pages: {
-    signIn: '/auth/signin',
-    error: '/auth/error',
+    signIn: '/api/auth/signin',
+    error: '/api/auth/error',
   },
 };
 
