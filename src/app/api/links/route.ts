@@ -117,19 +117,21 @@ export async function GET(request: NextRequest) {
   const city = searchParams.get('city');
   const language = searchParams.get('language');
   const status = searchParams.get('status');
+  const featuredType = searchParams.get('featuredType');
   // TODO: add full text searching using mongoose
   if (title) query.title = { $regex: title, $options: 'i' };
   if (category) query.category = category;
   if (country) query.country = country;
   if (city) query.city = city;
   if (language) query.language = language;
+  if (featuredType) query.featuredType = featuredType;
   // allow filter by status to only logged in users
   if (session && status) {
     // TODO: allow filter by status
     // TODO add index to status
     query.status = status;
   }
-
+  console.log("query", query)
   const data = await Link.find(query).lean();
 
   return Response.json({ status: 'success', data }, { status: 200 });

@@ -33,8 +33,8 @@ export default function Home({
   const utils = useUtils();
   const [searchTerm, setSearchTerm] = useState("");
   // const [filteredLinks, setFilteredLinks] = useState(links ?? []);
-  const [trendingLinks, setTrendingLinks] = useState(links ?? []);
-  const [newLinks, setNewLinks] = useState(links ?? []);
+  const [trendingLinks, setTrendingLinks] = useState( []);
+  const [newLinks, setNewLinks] = useState([]);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [activeCountry, setActiveCountry] = useState<string | null>(null);
   const [activeLanguage, setActiveLanguage] = useState<string | null>(null);
@@ -65,29 +65,36 @@ export default function Home({
     fetchAndSetCities();
   }, [activeCountry]);
 
-  useEffect(() => {
+
+  const useFilteredLinks = async ({params, type, setLinks}:{params: any; type: string; setLinks: any}) => {
     const queryParams = new URLSearchParams();
-    if (debouncedSearchTerm) queryParams.append("title", debouncedSearchTerm);
-    if (activeCategory) queryParams.append("category", activeCategory);
-    if (activeCountry) queryParams.append("country", activeCountry);
-    if (activeCity) queryParams.append("city", activeCity);
-    if (activeLanguage) queryParams.append("language", activeLanguage);
+    if (params?.debouncedSearchTerm) queryParams.append("title", params.debouncedSearchTerm);
+    if (params?.activeCategory) queryParams.append("category", params.activeCategory);
+    if (params?.activeCountry) queryParams.append("country", params.activeCountry);
+    if (params?.activeCity) queryParams.append("city", params.activeCity);
+    if (params?.activeLanguage) queryParams.append("language", params.activeLanguage);
+    if (type) queryParams.append("featuredType", type);
+    const response = await fetch(`/api/links?${queryParams}`);
+    const resData = await response.json();
+    const links = resData?.data;
+    setLinks(links);
+  }
 
-    const filterLinks = async () => {
-      const response = await fetch(`/api/links?${queryParams}`);
-      const resData = await response.json();
-      const links = resData?.data;
-      const trendingLinks = links.filter(
-        (item: any) => item.featuredType === "TRENDING"
-      );
-      const newLinks = links.filter(
-        (item: any) => item.featuredType === "NEW"
-      );
-      setTrendingLinks(trendingLinks);
-      setNewLinks(newLinks);
+
+  useEffect(() => {
+    const params = {
+      debouncedSearchTerm,
+      activeCategory,
+      activeCountry,
+      activeCity,
+      activeLanguage
+    }
+    const fetchData = async () => {
+      await useFilteredLinks({ params, type: "TRENDING", setLinks: setTrendingLinks });
+      await useFilteredLinks({ params, type: "NEW", setLinks: setNewLinks });
     };
-
-    filterLinks();
+  
+    fetchData();
   }, [
     debouncedSearchTerm,
     activeCategory,
@@ -149,13 +156,13 @@ export default function Home({
         </div>
       </FixedLayout>
       <Section className="mt-32">
-      {trendingLinks?.length > 0 && (
+        {trendingLinks?.length > 0 && (
           <Section header="Trending">
-            <div className="px-5">
-              <ul className="max-w-md divide-y divide-gray-200 dark:divide-gray-700">
+            <div className="px-5 overflow-auto hover:overflow-scroll no-scrollbar">
+              <ul className={`grid gap-x-6 grid-cols-2 ${trendingLinks?.length > 1 && "w-[50rem]"}`}>
                 {trendingLinks.map((item: any, index: number) => {
                   return (
-                    <li key={`new-link-${index}`} className="py-3 sm:pb-4">
+                    <li key={`new-link-${index}`} className="py-3 sm:pb-4  w-[25rem]">
                       <a
                         key={`link-${index}`}
                         href={`https://t.me/${item.link}`}
@@ -181,8 +188,8 @@ export default function Home({
                             </p>
                           </div>
                           <div className="inline-flex items-center text-base text-gray-900 dark:text-white">
-                            <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">
-                              Group
+                            <span className="text-xs font-medium me-2 px-2.5 py-1 rounded-full dark:bg-gray-700 dark:text-white">
+                              Open
                             </span>
                           </div>
                         </div>
@@ -191,18 +198,17 @@ export default function Home({
                   );
                 })}
               </ul>
-
-              {trendingLinks?.length === 0 && <Cell>No Results</Cell>}
+              {/* {trendingLinks?.length === 0 && <Cell>No Results</Cell>} */}
             </div>
           </Section>
         )}
         {newLinks?.length > 0 && (
           <Section header="New">
-            <div className="px-5">
-              <ul className="max-w-md divide-y divide-gray-200 dark:divide-gray-700">
+            <div className="px-5 overflow-auto hover:overflow-scroll no-scrollbar">
+              <ul className={`grid gap-x-6 grid-cols-2 ${newLinks?.length > 1 && "w-[50rem]"}`}>
                 {newLinks.map((item: any, index: number) => {
                   return (
-                    <li key={`new-link-${index}`} className="py-3 sm:pb-4">
+                    <li key={`new-link-${index}`} className="py-3 sm:pb-4  w-[25rem]">
                       <a
                         key={`link-${index}`}
                         href={`https://t.me/${item.link}`}
@@ -228,8 +234,8 @@ export default function Home({
                             </p>
                           </div>
                           <div className="inline-flex items-center text-base text-gray-900 dark:text-white">
-                            <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">
-                              Group
+                            <span className="text-xs font-medium me-2 px-2.5 py-1 rounded-full dark:bg-gray-700 dark:text-white">
+                              Open
                             </span>
                           </div>
                         </div>
@@ -238,11 +244,11 @@ export default function Home({
                   );
                 })}
               </ul>
-
-              {newLinks?.length === 0 && <Cell>No Results</Cell>}
+              {/* {newLinks?.length === 0 && <Cell>No Results</Cell>} */}
             </div>
           </Section>
         )}
+        
       </Section>
     </>
   );
