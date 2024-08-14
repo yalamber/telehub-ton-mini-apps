@@ -1,5 +1,6 @@
-'use client';
-import { LoginButton } from '@telegram-auth/react';
+import { getServerSession } from 'next-auth';
+import { useSession, signIn, signOut } from 'next-auth/react';
+import AuthButton from './auth-button';
 
 export default function AdminPage() {
   return (
@@ -15,13 +16,8 @@ export default function AdminPage() {
           <h2 className="font-bold text-gray-900 dark:text-white">
             Sign in to manage
           </h2>
-          <LoginButton
+          <AuthButton
             botUsername={process.env.NEXT_PUBLIC_TB_BOT_USERNAME as string}
-            authCallbackUrl="/api/auth_callback"
-            buttonSize="large" // "large" | "medium" | "small"
-            cornerRadius={5} // 0 - 20
-            showAvatar={true} // true | false
-            lang="en"
           />
         </div>
       </div>
