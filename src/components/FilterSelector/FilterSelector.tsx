@@ -60,6 +60,16 @@ const FilterSelector = ({
       }
     >
       <div className="m-2 px-5">
+        <List
+          className="cursor-pointer"
+          onClick={() => {
+            onChange(null);
+            setIsOpen(false);
+          }}
+        >
+          <Navigation className="pt-2">Not selected</Navigation>
+          <Divider />
+        </List>
         {items.map((item) => (
           <List
             key={item.value}

@@ -7,13 +7,7 @@ import {
   useViewport,
 } from '@telegram-apps/sdk-react';
 
-import {
-  Section,
-  FixedLayout,
-  Avatar,
-  Button,
-  Cell,
-} from '@telegram-apps/telegram-ui';
+import { Section, FixedLayout, Avatar, Cell } from '@telegram-apps/telegram-ui';
 import { Icon28AddCircle } from '@telegram-apps/telegram-ui/dist/icons/28/add_circle';
 import FilterSelector from '@/components/FilterSelector/FilterSelector';
 import { Link } from '@/components/Link/Link';
@@ -34,15 +28,15 @@ export default function Home({
 }: HomeProps) {
   const bb = useBackButton(true);
   const mb = useMainButton(true);
+  const vp = useViewport();
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredLinks, setFilteredLinks] = useState(links ?? []);
-  const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [activeCountry, setActiveCountry] = useState<string | null>(null);
   const [activeLanguage, setActiveLanguage] = useState<string | null>(null);
   const [activeCity, setActiveCity] = useState<string | null>(null);
   const [cities, setCities] = useState<Array<any>>([]);
-  const vp = useViewport();
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
   useEffect(() => {
     if (bb) {
@@ -118,11 +112,13 @@ export default function Home({
           </Link>
         </div>
         <div className="grid grid-flow-col space-x-2 m-4 justify-stretch overflow-x-auto">
-          <FilterSelector
-            items={categories}
-            label={activeCategory ?? 'Categories'}
-            onChange={setActiveCategory}
-          />
+          <div className="flex flex-col">
+            <FilterSelector
+              items={categories}
+              label={activeCategory ?? 'Categories'}
+              onChange={setActiveCategory}
+            />
+          </div>
           <FilterSelector
             items={countries}
             label={activeCountry ?? 'Countries'}
