@@ -13,7 +13,7 @@ declare module 'next-auth' {
   }
 }
 
-const ADMIN_USERS = [7108516313, 1279815786, 1279815786];
+const ADMIN_USERS = ['7108516313', '1279815786', '1279815786'];
 
 const authOptions: NextAuthOptions = {
   providers: [
@@ -30,7 +30,7 @@ const authOptions: NextAuthOptions = {
         const user = await validator.validate(data);
         console.log('user ======>', user);
         if (user.id && user.first_name) {
-          if (ADMIN_USERS.includes(user.id)) {
+          if (ADMIN_USERS.includes(user.id.toString())) {
             const returned = {
               id: user.id.toString(),
               email: user.id.toString(),
