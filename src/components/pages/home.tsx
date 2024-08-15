@@ -8,8 +8,12 @@ import {
   useUtils,
   useThemeParams,
 } from '@telegram-apps/sdk-react';
-
-import { Section, FixedLayout, Avatar } from '@telegram-apps/telegram-ui';
+import {
+  Avatar,
+  FixedLayout,
+  Section,
+  Skeleton,
+} from '@telegram-apps/telegram-ui';
 import { Icon28AddCircle } from '@telegram-apps/telegram-ui/dist/icons/28/add_circle';
 import FilterSelector from '@/components/FilterSelector/FilterSelector';
 import { Link } from '@/components/Link/Link';
@@ -36,6 +40,7 @@ export default function Home({
   const utils = useUtils();
   const themeParams = useThemeParams();
   const [searchTerm, setSearchTerm] = useState('');
+  const [contentLoading, setContentLoading] = useState(false);
   const [trendingLinks, setTrendingLinks] = useState(resTrendingLinks ?? []);
   const [newLinks, setNewLinks] = useState(resNewLinks ?? []);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
@@ -104,17 +109,27 @@ export default function Home({
       activeLanguage,
     };
     const fetchData = async () => {
-      await fetchFilteredLinks({
-        params,
-        type: 'TRENDING',
-        setLinks: setTrendingLinks,
-      });
-      await fetchFilteredLinks({ params, type: 'NEW', setLinks: setNewLinks });
-      // TODO get all links below and also add pagination
+      try {
+        setContentLoading(true);
+        await fetchFilteredLinks({
+          params,
+          type: 'TRENDING',
+          setLinks: setTrendingLinks,
+        });
+        await fetchFilteredLinks({
+          params,
+          type: 'NEW',
+          setLinks: setNewLinks,
+        });
+        // TODO get all links below and also add pagination
+      } catch (e) {
+        console.log(e);
+        // TODO: add visual feedback or snackbar for error
+      } finally {
+        setContentLoading(false);
+      }
     };
-    if (debouncedSearchTerm || activeCountry || activeCity || activeLanguage) {
-      fetchData();
-    }
+    fetchData();
   }, [
     debouncedSearchTerm,
     activeCategory,
@@ -150,15 +165,21 @@ export default function Home({
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+                    <p
+                      className={`text-sm font-medium text-gray-900 truncate text-[${themeParams.linkColor}]`}
+                    >
                       {item.title}
                     </p>
-                    <p className="text-sm text-gray-500 truncate dark:text-gray-400">
+                    <p
+                      className={`text-xs truncate text-[${themeParams.textColor}]`}
+                    >
                       {item.memberCount} members
                     </p>
                   </div>
-                  <div className="inline-flex items-center text-base text-gray-900 dark:text-white">
-                    <span className="text-xs font-medium me-2 px-2.5 py-1 rounded-full dark:bg-gray-700 dark:text-white">
+                  <div className="inline-flex items-center text-base">
+                    <span
+                      className={`text-xs font-medium me-2 px-2.5 py-1 rounded-full bg-[${themeParams.accentTextColor}]`}
+                    >
                       Open
                     </span>
                   </div>
@@ -170,9 +191,8 @@ export default function Home({
       </ul>
     );
   };
-
   return (
-    <>
+    <Skeleton visible={contentLoading}>
       <FixedLayout
         vertical="top"
         style={{
@@ -287,15 +307,15 @@ export default function Home({
       </FixedLayout>
       <Section className="mt-32">
         {trendingLinks?.length > 0 && (
-          <Section header="Trending" className="pb-4">
-            <div className="px-5 overflow-auto hover:overflow-scroll no-scrollbar">
+          <Section header="Trending">
+            <div className="px-5 pb-4 overflow-auto hover:overflow-scroll no-scrollbar">
               <LinkListDisplay links={trendingLinks} />
             </div>
           </Section>
         )}
         {newLinks?.length > 0 && (
           <Section header="New">
-            <div className="px-5 overflow-auto hover:overflow-scroll no-scrollbar">
+            <div className="px-5 pb-4 overflow-auto hover:overflow-scroll no-scrollbar">
               <LinkListDisplay links={newLinks} />
             </div>
           </Section>
@@ -306,6 +326,6 @@ export default function Home({
           </div>
         </Section>
       </Section>
-    </>
+    </Skeleton>
   );
 }
