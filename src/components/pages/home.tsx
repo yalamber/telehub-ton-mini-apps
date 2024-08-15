@@ -18,6 +18,7 @@ import { Icon28AddCircle } from "@telegram-apps/telegram-ui/dist/icons/28/add_ci
 import FilterSelector from "@/components/FilterSelector/FilterSelector";
 import { Link } from "@/components/Link/Link";
 import { fetchCities } from "@/utils/helpers";
+import { useFirstRender } from "@/hooks/useFirstRender";
 
 interface HomeProps {
   countries: Array<any>;
@@ -41,6 +42,7 @@ export default function Home({
   const vp = useViewport();
   const utils = useUtils();
   const themeParams = useThemeParams();
+  const firstRender = useFirstRender();
   const [searchTerm, setSearchTerm] = useState("");
   const [contentLoading, setContentLoading] = useState(false);
   const [trendingLinks, setTrendingLinks] = useState(resTrendingLinks ?? []);
@@ -129,9 +131,8 @@ export default function Home({
             params,
             type: "NONE",
             setLinks: setLinks,
-          })
-        ])
-        
+          }),
+        ]);
         // TODO get all links below and also add pagination
       } catch (e) {
         console.log(e);
@@ -140,8 +141,12 @@ export default function Home({
         setContentLoading(false);
       }
     };
-    fetchData();
+    console.log("firstRender", firstRender)
+    if (!firstRender) {
+      fetchData();
+    }
   }, [
+    firstRender,
     debouncedSearchTerm,
     activeCategory,
     activeCountry,
@@ -150,18 +155,27 @@ export default function Home({
   ]);
 
   // Link list display component for featured items
-  const LinkListDisplay = ({ links, fullWidth = false }: { links: Array<any>, fullWidth?: boolean }) => {
-    const wrapperDivWidth = fullWidth || links?.length === 1  ? "w-full" : "grid gap-x-6 grid-cols-2 w-[50rem]";
-    const innerDivWidth = fullWidth || links?.length === 1 ? "w-full" : "w-[90%]";
+  const LinkListDisplay = ({
+    links,
+    fullWidth = false,
+  }: {
+    links: Array<any>;
+    fullWidth?: boolean;
+  }) => {
+    const wrapperDivWidth =
+      fullWidth || links?.length === 1
+        ? "w-full"
+        : "grid gap-x-6 grid-cols-2 w-[50rem]";
+    const innerDivWidth =
+      fullWidth || links?.length === 1 ? "w-full" : "w-[90%]";
     return (
-      <ul
-        className={`${
-          wrapperDivWidth
-        }`}
-      >
+      <ul className={`${wrapperDivWidth}`}>
         {links.map((item: any) => {
           return (
-            <li key={`link-${item._id}`} className={`py-3 sm:pb-4 ${innerDivWidth}`}>
+            <li
+              key={`link-${item._id}`}
+              className={`py-3 sm:pb-4 ${innerDivWidth}`}
+            >
               <a
                 href={`https://t.me/${item.link}`}
                 onClick={(e) => {
