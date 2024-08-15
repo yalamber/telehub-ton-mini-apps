@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ReactElement, useState } from 'react';
 import {
   Modal,
   Button,
@@ -10,17 +10,21 @@ import {
 import { Icon28Close } from '@telegram-apps/telegram-ui/dist/icons/28/close';
 
 interface FilterProps {
+  icon: ReactElement;
   items: Array<{ label: string; value: string }>;
   label: string;
   onChange: (value: string | null) => void;
   disabled?: boolean;
+  triggerClass?: string;
 }
 
 const FilterSelector = ({
+  icon,
   items,
   label = 'select',
   disabled = false,
   onChange,
+  triggerClass,
 }: FilterProps) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
@@ -50,10 +54,12 @@ const FilterSelector = ({
       }}
       trigger={
         <Button
+          before={<>{icon}</>}
           disabled={disabled}
-          size="m"
-          mode="bezeled"
+          size="s"
+          mode="plain"
           onClick={() => setIsOpen(items?.length > 0 ? true : false)}
+          className={`${triggerClass ?? ''}`}
         >
           {label}
         </Button>
