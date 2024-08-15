@@ -19,14 +19,16 @@ interface HomeProps {
   countries: Array<any>;
   languages: Array<any>;
   categories: Array<any>;
-  links: Array<any>;
+  resTrendingLinks: Array<any>;
+  resNewLinks: Array<any>;
 }
 
 export default function Home({
   countries,
   languages,
   categories,
-  links,
+  resTrendingLinks,
+  resNewLinks,
 }: HomeProps) {
   const bb = useBackButton(true);
   const mb = useMainButton(true);
@@ -34,9 +36,8 @@ export default function Home({
   const utils = useUtils();
   const themeParams = useThemeParams();
   const [searchTerm, setSearchTerm] = useState('');
-  // const [filteredLinks, setFilteredLinks] = useState(links ?? []);
-  const [trendingLinks, setTrendingLinks] = useState([]);
-  const [newLinks, setNewLinks] = useState([]);
+  const [trendingLinks, setTrendingLinks] = useState(resTrendingLinks ?? []);
+  const [newLinks, setNewLinks] = useState(resNewLinks ?? []);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [activeCountry, setActiveCountry] = useState<string | null>(null);
   const [activeLanguage, setActiveLanguage] = useState<string | null>(null);
@@ -48,14 +49,15 @@ export default function Home({
     if (bb) {
       bb.hide();
     }
-  }, [bb]);
-
-  useEffect(() => {
     if (mb) {
       mb.hide();
     }
-  }, [mb]);
+    if (vp?.expand) {
+      vp?.expand();
+    }
+  }, [bb, mb, vp]);
 
+  // set cities if active country changed
   useEffect(() => {
     const fetchAndSetCities = async () => {
       if (activeCountry) {
@@ -108,9 +110,11 @@ export default function Home({
         setLinks: setTrendingLinks,
       });
       await fetchFilteredLinks({ params, type: 'NEW', setLinks: setNewLinks });
+      // TODO get all links below and also add pagination
     };
-
-    fetchData();
+    if (debouncedSearchTerm || activeCountry || activeCity || activeLanguage) {
+      fetchData();
+    }
   }, [
     debouncedSearchTerm,
     activeCategory,
@@ -119,12 +123,7 @@ export default function Home({
     activeLanguage,
   ]);
 
-  useEffect(() => {
-    if (vp?.expand) {
-      vp?.expand();
-    }
-  }, [vp]);
-  
+  // Link list display component for featured items
   const LinkListDisplay = ({ links }: { links: Array<any> }) => {
     return (
       <ul
@@ -171,6 +170,7 @@ export default function Home({
       </ul>
     );
   };
+
   return (
     <>
       <FixedLayout
@@ -290,7 +290,6 @@ export default function Home({
           <Section header="Trending" className="pb-4">
             <div className="px-5 overflow-auto hover:overflow-scroll no-scrollbar">
               <LinkListDisplay links={trendingLinks} />
-              {/* {trendingLinks?.length === 0 && <Cell>No Results</Cell>} */}
             </div>
           </Section>
         )}
@@ -298,10 +297,14 @@ export default function Home({
           <Section header="New">
             <div className="px-5 overflow-auto hover:overflow-scroll no-scrollbar">
               <LinkListDisplay links={newLinks} />
-              {/* {newLinks?.length === 0 && <Cell>No Results</Cell>} */}
             </div>
           </Section>
         )}
+        <Section>
+          <div className="px-5 py-5 overflow-auto hover:overflow-scroll no-scrollbar">
+            show remaining links here
+          </div>
+        </Section>
       </Section>
     </>
   );
