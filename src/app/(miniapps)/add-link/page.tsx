@@ -1,6 +1,6 @@
 import connectMongo from '@/utils/dbConnect';
 import FilterOption from '@/models/FilterOption';
-import { Section } from '@telegram-apps/telegram-ui';
+import { Headline } from '@telegram-apps/telegram-ui';
 
 async function getData() {
   await connectMongo();
@@ -19,12 +19,15 @@ import AddForm from './addForm';
 export default async function AddLinkPage() {
   const { categories, countries, languages } = await getData();
   return (
-    <Section header="Channel/Group Details">
+    <div className="py-5">
+      <div className="px-5 pb-5">
+        <Headline weight="1">Submit your link</Headline>
+      </div>
       <AddForm
         categories={JSON.parse(JSON.stringify(categories))}
         countries={JSON.parse(JSON.stringify(countries))}
         languages={JSON.parse(JSON.stringify(languages))}
       />
-    </Section>
+    </div>
   );
 }
