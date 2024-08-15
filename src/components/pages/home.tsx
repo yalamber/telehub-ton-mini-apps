@@ -8,17 +8,14 @@ import {
   useUtils,
   useThemeParams,
 } from '@telegram-apps/sdk-react';
-import {
-  Avatar,
-  FixedLayout,
-  Section,
-  Skeleton,
-} from '@telegram-apps/telegram-ui';
+import { FixedLayout, Section, Skeleton } from '@telegram-apps/telegram-ui';
 import { Icon28AddCircle } from '@telegram-apps/telegram-ui/dist/icons/28/add_circle';
-import FilterSelector from '@/components/FilterSelector/FilterSelector';
-import { Link } from '@/components/Link/Link';
+import LinkDisplay from '@/components/LinkDisplay';
+import FilterSelector from '@/components/FilterSelector';
+import { Link } from '@/components/Link';
 import { fetchCities } from '@/utils/helpers';
 import { useFirstRender } from '@/hooks/useFirstRender';
+import InfiniteLinkList from '@/components/InfiniteLinkList';
 
 interface HomeProps {
   countries: Array<any>;
@@ -180,54 +177,14 @@ export default function Home({
               key={`link-${item._id}`}
               className={`py-3 sm:pb-4 ${innerDivWidth}`}
             >
-              <a
-                href={`https://t.me/${item.link}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  utils.openTelegramLink(`https://t.me/${item.link}`);
-                }}
-              >
-                <div className="flex items-center space-x-4 rtl:space-x-reverse">
-                  <div className="flex-shrink-0">
-                    <Avatar
-                      size={40}
-                      src={item.photo ?? ''}
-                      acronym={item.title.slice(0, 1)}
-                    />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p
-                      className={`text-sm font-medium text-gray-900 truncate`}
-                      style={{ color: themeParams.textColor }}
-                    >
-                      {item.title}
-                    </p>
-                    <p
-                      className={`text-xs truncate`}
-                      style={{ color: themeParams.textColor }}
-                    >
-                      {item.memberCount} members
-                    </p>
-                  </div>
-                  <div className="inline-flex items-center text-base">
-                    <span
-                      className={`text-xs font-medium me-2 px-2.5 py-1 rounded-full`}
-                      style={{
-                        background: themeParams.accentTextColor,
-                        color: themeParams.bgColor,
-                      }}
-                    >
-                      {item.type === 'CHANNEL' ? 'Channel' : 'Group'}
-                    </span>
-                  </div>
-                </div>
-              </a>
+              <LinkDisplay item={item} />
             </li>
           );
         })}
       </ul>
     );
   };
+
   return (
     <Skeleton visible={contentLoading}>
       <FixedLayout
@@ -361,7 +318,7 @@ export default function Home({
         {links?.length > 0 && (
           <Section header="Links">
             <div className="px-5 py-5">
-              <LinkListDisplay fullWidth={true} links={links} />
+              <InfiniteLinkList initialLinks={links} />
             </div>
           </Section>
         )}
