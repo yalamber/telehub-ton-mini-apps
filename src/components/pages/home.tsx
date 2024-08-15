@@ -157,7 +157,8 @@ export default function Home({
       </FixedLayout>
       <Section className="mt-32">
         {trendingLinks?.length > 0 && (
-          <Section header="Trending">
+          <Section className="relative" header="Trending">
+            {/* <div className="absolute top-4 right-3 cursor-pointer">View All</div> */}
             <div className="px-5 overflow-auto hover:overflow-scroll no-scrollbar">
               <ul className={`grid gap-x-6 grid-cols-2 ${trendingLinks?.length > 1 && "w-[50rem]"}`}>
                 {trendingLinks.map((item: any, index: number) => {
