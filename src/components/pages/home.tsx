@@ -152,7 +152,7 @@ export default function Home({
   // Link list display component for featured items
   const LinkListDisplay = ({ links, fullWidth = false }: { links: Array<any>, fullWidth?: boolean }) => {
     const wrapperDivWidth = fullWidth || links?.length === 1  ? "w-full" : "grid gap-x-6 grid-cols-2 w-[50rem]";
-    const innerDivWidth = fullWidth || links?.length === 1 ? "w-full" : "w-[25rem]";
+    const innerDivWidth = fullWidth || links?.length === 1 ? "w-full" : "w-[90%]";
     return (
       <ul
         className={`${
