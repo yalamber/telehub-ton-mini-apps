@@ -8,26 +8,28 @@ async function getData() {
 
   const filterTypes = ['CATEGORY', 'COUNTRY', 'LANGUAGE'];
 
-  const [categories, countries, languages, trendingLinks, newLinks] =
+  const [categories, countries, languages, trendingLinks, newLinks, links] =
     await Promise.all([
       ...filterTypes.map((type) => FilterOption.find({ type }).lean()),
       // TODO: order both queries by last modified date
       Link.find({ featuredType: 'TRENDING' }).limit(10).lean(),
       Link.find({ featuredType: 'NEW' }).limit(10).lean(),
+      Link.find({ featuredType: 'NONE' }).limit(10).lean(),
     ]);
 
-  return { categories, countries, languages, trendingLinks, newLinks };
+  return { categories, countries, languages, trendingLinks, newLinks, links };
 }
 
 export const revalidate = 120;
 
 export default async function Home() {
-  const { categories, countries, languages, trendingLinks, newLinks } =
+  const { categories, countries, languages, trendingLinks, newLinks, links } =
     await getData();
   return (
     <HomePage
       resTrendingLinks={JSON.parse(JSON.stringify(trendingLinks))}
       resNewLinks={JSON.parse(JSON.stringify(newLinks))}
+      resLinks={JSON.parse(JSON.stringify(links))}
       categories={JSON.parse(JSON.stringify(categories))}
       countries={JSON.parse(JSON.stringify(countries))}
       languages={JSON.parse(JSON.stringify(languages))}
