@@ -51,7 +51,7 @@ export default function InfiniteLinkList({
   return (
     <div>
       {links.map((item: any) => (
-        <LinkDisplay item={item} />
+        <LinkDisplay key={item._id} item={item} />
       ))}
       <div className="p-4">
         {hasMoreData && (

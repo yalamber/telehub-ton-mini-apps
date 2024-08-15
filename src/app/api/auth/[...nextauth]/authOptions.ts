@@ -27,6 +27,7 @@ const authOptions: NextAuthOptions = {
         });
         const data = objectToAuthDataMap(req.query || {});
         const user = await validator.validate(data);
+        console.log('user', user);
         if (
           user.id &&
           user.first_name &&
