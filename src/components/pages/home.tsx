@@ -166,19 +166,25 @@ export default function Home({
                   </div>
                   <div className="flex-1 min-w-0">
                     <p
-                      className={`text-sm font-medium text-gray-900 truncate text-[${themeParams.textColor}]`}
+                      className={`text-sm font-medium text-gray-900 truncate`}
+                      style={{ color: themeParams.textColor }}
                     >
                       {item.title}
                     </p>
                     <p
-                      className={`text-xs truncate text-[${themeParams.textColor}]`}
+                      className={`text-xs truncate`}
+                      style={{ color: themeParams.textColor }}
                     >
                       {item.memberCount} members
                     </p>
                   </div>
                   <div className="inline-flex items-center text-base">
                     <span
-                      className={`text-xs font-medium me-2 px-2.5 py-1 rounded-full bg-[${themeParams.accentTextColor}]`}
+                      className={`text-xs font-medium me-2 px-2.5 py-1 rounded-full`}
+                      style={{
+                        background: themeParams.accentTextColor,
+                        color: themeParams.bgColor,
+                      }}
                     >
                       Open
                     </span>
@@ -197,8 +203,9 @@ export default function Home({
         vertical="top"
         style={{
           padding: 0,
+          background: themeParams.bgColor,
         }}
-        className={`z-10 bg-[${themeParams.bgColor}]`}
+        className={`z-10`}
       >
         <div className="flex m-4">
           <input
