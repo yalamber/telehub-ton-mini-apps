@@ -106,6 +106,10 @@ export default function Home({
   };
 
   useEffect(() => {
+    console.log('This is run once');
+  }, []);
+  
+  useEffect(() => {
     const params = {
       debouncedSearchTerm,
       activeCategory,
