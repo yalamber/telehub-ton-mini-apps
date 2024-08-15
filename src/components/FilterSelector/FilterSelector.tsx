@@ -57,7 +57,7 @@ const FilterSelector = ({
           before={<>{icon}</>}
           disabled={disabled}
           size="s"
-          mode="outline"
+          mode="plain"
           onClick={() => setIsOpen(items?.length > 0 ? true : false)}
           className={`p-0 ${triggerClass ?? ''}`}
         >
