@@ -12,7 +12,7 @@ import { extractUsername } from '../utils/telegram.ts';
   const records: Array<any> = [];
   // Initialize the parser
   fs.createReadStream(`${__dirname}/data/links.csv`)
-    .pipe(parse({ delimiter: ';' }))
+    .pipe(parse({ from: 2, delimiter: ';' }))
     .on('data', function (csvRow) {
       records.push(csvRow);
     })
@@ -20,17 +20,20 @@ import { extractUsername } from '../utils/telegram.ts';
       //do something with csvData
       (async () => {
         await Link.insertMany(
-          records.map((record) => ({
-            link: extractUsername(record[0]),
-            title: '',
-            category: record[1],
-            country: record[2],
-            city: record[3],
-            language: record[4],
-            status: 'APPROVED',
-            featuredType: 'NONE',
-            submittedById: 1253120502,
-          }))
+          records.map((record) => {
+            return {
+              link: extractUsername(record[0]),
+              title: extractUsername(record[0]),
+              category: record[1],
+              country: record[2],
+              city: record[3],
+              language: record[4],
+              status: 'APPROVED',
+              featuredType: 'NONE',
+              submittedById: 1253120502,
+            };
+          }),
+          { ordered: false }
         );
       })();
     });

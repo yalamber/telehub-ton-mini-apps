@@ -48,7 +48,7 @@ export async function getChannelDetails(name: string, tgSession: string) {
     isSupergroup: entity instanceof Api.Channel && entity.megagroup,
     memberCount: memberCount || 0,
     photo: '',
-    type
+    type,
   };
   if ((entity as any)?.photo instanceof Api.ChatPhoto) {
     console.log('Get Photo', (entity as any)?.photo);
@@ -76,9 +76,9 @@ export function extractUsername(link: string): string | null {
     return match[1]; // Return the captured username
   }
 
-  // If the input is already a plain username
-  if (/^[a-zA-Z0-9_]{5,32}$/.test(link)) {
-    return link;
+  // If the input is a plain username or @username format
+  if (/^@?[a-zA-Z0-9_]{5,32}$/.test(link)) {
+    return link.replace(/^@/, ''); // Remove @ if present
   }
 
   return null; // Return null if no valid username found
