@@ -8,7 +8,7 @@ import {
   useUtils,
 } from "@telegram-apps/sdk-react";
 
-import { Section, FixedLayout, Avatar, Cell } from "@telegram-apps/telegram-ui";
+import { Section, FixedLayout, Avatar } from "@telegram-apps/telegram-ui";
 import { Icon28AddCircle } from "@telegram-apps/telegram-ui/dist/icons/28/add_circle";
 import FilterSelector from "@/components/FilterSelector/FilterSelector";
 import { Link } from "@/components/Link/Link";
@@ -66,7 +66,7 @@ export default function Home({
   }, [activeCountry]);
 
 
-  const useFilteredLinks = async ({params, type, setLinks}:{params: any; type: string; setLinks: any}) => {
+  const fetchFilteredLinks = async ({params, type, setLinks}:{params: any; type: string; setLinks: any}) => {
     const queryParams = new URLSearchParams();
     if (params?.debouncedSearchTerm) queryParams.append("title", params.debouncedSearchTerm);
     if (params?.activeCategory) queryParams.append("category", params.activeCategory);
@@ -90,8 +90,8 @@ export default function Home({
       activeLanguage
     }
     const fetchData = async () => {
-      await useFilteredLinks({ params, type: "TRENDING", setLinks: setTrendingLinks });
-      await useFilteredLinks({ params, type: "NEW", setLinks: setNewLinks });
+      await fetchFilteredLinks({ params, type: "TRENDING", setLinks: setTrendingLinks });
+      await fetchFilteredLinks({ params, type: "NEW", setLinks: setNewLinks });
     };
   
     fetchData();
