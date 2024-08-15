@@ -38,7 +38,7 @@ const fonts = localFont({
       style: 'normal',
     },
     {
-      path: '../_assets/elix/Gellix-Medium.woff2',
+      path: '../_assets/gelix/Gellix-Medium.woff2',
       weight: '500',
       style: 'normal',
     },
