@@ -124,7 +124,53 @@ export default function Home({
       vp?.expand();
     }
   }, [vp]);
-  console.log('themeParams', themeParams);
+  // console.log('themeParams', themeParams);
+  const LinkListDisplay = ({ links }: { links: Array<any> }) => {
+    return (
+      <ul
+        className={`grid gap-x-6 grid-cols-2 ${
+          links?.length > 1 && 'w-[50rem]'
+        }`}
+      >
+        {links.map((item: any) => {
+          return (
+            <li key={`link-${item._id}`} className="py-3 sm:pb-4 w-[25rem]">
+              <a
+                href={`https://t.me/${item.link}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  utils.openTelegramLink(`https://t.me/${item.link}`);
+                }}
+              >
+                <div className="flex items-center space-x-4 rtl:space-x-reverse">
+                  <div className="flex-shrink-0">
+                    <Avatar
+                      size={40}
+                      src={item.photo ?? ''}
+                      acronym={item.title.slice(0, 1)}
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+                      {item.title}
+                    </p>
+                    <p className="text-sm text-gray-500 truncate dark:text-gray-400">
+                      {item.memberCount} members
+                    </p>
+                  </div>
+                  <div className="inline-flex items-center text-base text-gray-900 dark:text-white">
+                    <span className="text-xs font-medium me-2 px-2.5 py-1 rounded-full dark:bg-gray-700 dark:text-white">
+                      Open
+                    </span>
+                  </div>
+                </div>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    );
+  };
   return (
     <>
       <FixedLayout
@@ -241,54 +287,9 @@ export default function Home({
       </FixedLayout>
       <Section className="mt-32">
         {trendingLinks?.length > 0 && (
-          <Section header="Trending">
+          <Section header="Trending" className="pb-4">
             <div className="px-5 overflow-auto hover:overflow-scroll no-scrollbar">
-              <ul
-                className={`grid gap-x-6 grid-cols-2 ${
-                  trendingLinks?.length > 1 && 'w-[50rem]'
-                }`}
-              >
-                {trendingLinks.map((item: any, index: number) => {
-                  return (
-                    <li
-                      key={`new-link-${index}`}
-                      className="py-3 sm:pb-4  w-[25rem]"
-                    >
-                      <a
-                        key={`link-${index}`}
-                        href={`https://t.me/${item.link}`}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          utils.openTelegramLink(`https://t.me/${item.link}`);
-                        }}
-                      >
-                        <div className="flex items-center space-x-4 rtl:space-x-reverse">
-                          <div className="flex-shrink-0">
-                            <Avatar
-                              size={40}
-                              src={item.photo ?? ''}
-                              acronym={item.title.slice(0, 1)}
-                            />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                              {item.title}
-                            </p>
-                            <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                              {item.memberCount} members
-                            </p>
-                          </div>
-                          <div className="inline-flex items-center text-base text-gray-900 dark:text-white">
-                            <span className="text-xs font-medium me-2 px-2.5 py-1 rounded-full dark:bg-gray-700 dark:text-white">
-                              Open
-                            </span>
-                          </div>
-                        </div>
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
+              <LinkListDisplay links={trendingLinks} />
               {/* {trendingLinks?.length === 0 && <Cell>No Results</Cell>} */}
             </div>
           </Section>
@@ -296,52 +297,7 @@ export default function Home({
         {newLinks?.length > 0 && (
           <Section header="New">
             <div className="px-5 overflow-auto hover:overflow-scroll no-scrollbar">
-              <ul
-                className={`grid gap-x-6 grid-cols-2 ${
-                  newLinks?.length > 1 && 'w-[50rem]'
-                }`}
-              >
-                {newLinks.map((item: any, index: number) => {
-                  return (
-                    <li
-                      key={`new-link-${index}`}
-                      className="py-3 sm:pb-4  w-[25rem]"
-                    >
-                      <a
-                        key={`link-${index}`}
-                        href={`https://t.me/${item.link}`}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          utils.openTelegramLink(`https://t.me/${item.link}`);
-                        }}
-                      >
-                        <div className="flex items-center space-x-4 rtl:space-x-reverse">
-                          <div className="flex-shrink-0">
-                            <Avatar
-                              size={40}
-                              src={item.photo ?? ''}
-                              acronym={item.title.slice(0, 1)}
-                            />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                              {item.title}
-                            </p>
-                            <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                              {item.memberCount} members
-                            </p>
-                          </div>
-                          <div className="inline-flex items-center text-base text-gray-900 dark:text-white">
-                            <span className="text-xs font-medium me-2 px-2.5 py-1 rounded-full dark:bg-gray-700 dark:text-white">
-                              Open
-                            </span>
-                          </div>
-                        </div>
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
+              <LinkListDisplay links={newLinks} />
               {/* {newLinks?.length === 0 && <Cell>No Results</Cell>} */}
             </div>
           </Section>

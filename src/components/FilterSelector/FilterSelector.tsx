@@ -59,7 +59,7 @@ const FilterSelector = ({
           size="s"
           mode="plain"
           onClick={() => setIsOpen(items?.length > 0 ? true : false)}
-          className={`p-0 ${triggerClass ?? ''}`}
+          className={`${triggerClass ?? ''}`}
         >
           {label}
         </Button>
