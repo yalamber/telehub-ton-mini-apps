@@ -150,7 +150,6 @@ export default function Home({
       fetchData();
     }
   }, [
-    firstRender,
     debouncedSearchTerm,
     activeCategory,
     activeCountry,
