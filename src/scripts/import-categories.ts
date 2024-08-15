@@ -3,7 +3,6 @@ import categories from './data/category.json' with { type: "json" };
 import languages from './data/language.json' with { type: "json" };
 import countries from './data/countries.json' with { type: "json" };
 import FilterOption from '../models/FilterOption.ts';
-import { count } from 'console';
 
 (async () => {
   await dbConnect();
