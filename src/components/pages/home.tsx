@@ -124,7 +124,7 @@ export default function Home({
       vp?.expand();
     }
   }, [vp]);
-  // console.log('themeParams', themeParams);
+  
   const LinkListDisplay = ({ links }: { links: Array<any> }) => {
     return (
       <ul
@@ -183,7 +183,7 @@ export default function Home({
         <div className="flex m-4">
           <input
             type="text"
-            className={`p-2 mr-2 flex-grow rounded-xl bg-transparent border border-[${themeParams.accentTextColor}]`}
+            className={`p-2 mr-4 flex-grow rounded-xl bg-transparent border border-[${themeParams.accentTextColor}]`}
             placeholder="Search"
             onChange={(e) => setSearchTerm(e.target.value)}
           />
