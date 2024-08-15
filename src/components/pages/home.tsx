@@ -1,24 +1,24 @@
-"use client";
-import { useEffect, useState } from "react";
-import { useDebounce } from "@uidotdev/usehooks";
+'use client';
+import { useEffect, useState } from 'react';
+import { useDebounce } from '@uidotdev/usehooks';
 import {
   useBackButton,
   useMainButton,
   useViewport,
   useUtils,
   useThemeParams,
-} from "@telegram-apps/sdk-react";
+} from '@telegram-apps/sdk-react';
 import {
   Avatar,
   FixedLayout,
   Section,
   Skeleton,
-} from "@telegram-apps/telegram-ui";
-import { Icon28AddCircle } from "@telegram-apps/telegram-ui/dist/icons/28/add_circle";
-import FilterSelector from "@/components/FilterSelector/FilterSelector";
-import { Link } from "@/components/Link/Link";
-import { fetchCities } from "@/utils/helpers";
-import { useFirstRender } from "@/hooks/useFirstRender";
+} from '@telegram-apps/telegram-ui';
+import { Icon28AddCircle } from '@telegram-apps/telegram-ui/dist/icons/28/add_circle';
+import FilterSelector from '@/components/FilterSelector/FilterSelector';
+import { Link } from '@/components/Link/Link';
+import { fetchCities } from '@/utils/helpers';
+import { useFirstRender } from '@/hooks/useFirstRender';
 
 interface HomeProps {
   countries: Array<any>;
@@ -43,7 +43,7 @@ export default function Home({
   const utils = useUtils();
   const themeParams = useThemeParams();
   const firstRender = useFirstRender();
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [contentLoading, setContentLoading] = useState(false);
   const [trendingLinks, setTrendingLinks] = useState(resTrendingLinks ?? []);
   const [newLinks, setNewLinks] = useState(resNewLinks ?? []);
@@ -90,15 +90,15 @@ export default function Home({
   }) => {
     const queryParams = new URLSearchParams();
     if (params?.debouncedSearchTerm)
-      queryParams.append("title", params.debouncedSearchTerm);
+      queryParams.append('title', params.debouncedSearchTerm);
     if (params?.activeCategory)
-      queryParams.append("category", params.activeCategory);
+      queryParams.append('category', params.activeCategory);
     if (params?.activeCountry)
-      queryParams.append("country", params.activeCountry);
-    if (params?.activeCity) queryParams.append("city", params.activeCity);
+      queryParams.append('country', params.activeCountry);
+    if (params?.activeCity) queryParams.append('city', params.activeCity);
     if (params?.activeLanguage)
-      queryParams.append("language", params.activeLanguage);
-    if (type) queryParams.append("featuredType", type);
+      queryParams.append('language', params.activeLanguage);
+    if (type) queryParams.append('featuredType', type);
     const response = await fetch(`/api/links?${queryParams}`);
     const resData = await response.json();
     const links = resData?.data;
@@ -108,7 +108,7 @@ export default function Home({
   useEffect(() => {
     console.log('This is run once');
   }, []);
-  
+
   useEffect(() => {
     const params = {
       debouncedSearchTerm,
@@ -123,17 +123,17 @@ export default function Home({
         await Promise.all([
           fetchFilteredLinks({
             params,
-            type: "TRENDING",
+            type: 'TRENDING',
             setLinks: setTrendingLinks,
           }),
           fetchFilteredLinks({
             params,
-            type: "NEW",
+            type: 'NEW',
             setLinks: setNewLinks,
           }),
           fetchFilteredLinks({
             params,
-            type: "NONE",
+            type: 'NONE',
             setLinks: setLinks,
           }),
         ]);
@@ -145,7 +145,7 @@ export default function Home({
         setContentLoading(false);
       }
     };
-    console.log("firstRender", firstRender)
+    console.log('firstRender', firstRender);
     if (!firstRender) {
       fetchData();
     }
@@ -168,10 +168,10 @@ export default function Home({
   }) => {
     const wrapperDivWidth =
       fullWidth || links?.length === 1
-        ? "w-full"
-        : "grid gap-x-6 grid-cols-2 w-[50rem]";
+        ? 'w-full'
+        : 'grid gap-x-6 grid-cols-2 w-[50rem]';
     const innerDivWidth =
-      fullWidth || links?.length === 1 ? "w-full" : "w-[90%]";
+      fullWidth || links?.length === 1 ? 'w-full' : 'w-[90%]';
     return (
       <ul className={`${wrapperDivWidth}`}>
         {links.map((item: any) => {
@@ -191,7 +191,7 @@ export default function Home({
                   <div className="flex-shrink-0">
                     <Avatar
                       size={40}
-                      src={item.photo ?? ""}
+                      src={item.photo ?? ''}
                       acronym={item.title.slice(0, 1)}
                     />
                   </div>
@@ -217,7 +217,7 @@ export default function Home({
                         color: themeParams.bgColor,
                       }}
                     >
-                      Open
+                      {item.type === 'CHANNEL' ? 'Channel' : 'Group'}
                     </span>
                   </div>
                 </div>
@@ -269,7 +269,7 @@ export default function Home({
               </svg>
             }
             items={countries}
-            label={activeCountry ?? "Countries"}
+            label={activeCountry ?? 'Countries'}
             onChange={setActiveCountry}
           />
           <FilterSelector
@@ -289,7 +289,7 @@ export default function Home({
             }
             disabled={!activeCountry}
             items={cities}
-            label={activeCity ?? "City"}
+            label={activeCity ?? 'City'}
             onChange={setActiveCity}
           />
           <FilterSelector
@@ -311,7 +311,7 @@ export default function Home({
               </svg>
             }
             items={languages}
-            label={activeLanguage ?? "Language"}
+            label={activeLanguage ?? 'Language'}
             onChange={setActiveLanguage}
           />
           <FilterSelector
@@ -338,7 +338,7 @@ export default function Home({
               </svg>
             }
             items={categories}
-            label={activeCategory ?? "Categories"}
+            label={activeCategory ?? 'Categories'}
             onChange={setActiveCategory}
           />
         </div>
