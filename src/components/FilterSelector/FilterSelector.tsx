@@ -56,10 +56,10 @@ const FilterSelector = ({
         <Button
           before={<>{icon}</>}
           disabled={disabled}
-          size="m"
-          mode="bezeled"
+          size="s"
+          mode="outline"
           onClick={() => setIsOpen(items?.length > 0 ? true : false)}
-          className={triggerClass ?? ''}
+          className={`p-0 ${triggerClass ?? ''}`}
         >
           {label}
         </Button>

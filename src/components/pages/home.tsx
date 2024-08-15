@@ -151,7 +151,7 @@ export default function Home({
         </div>
         <div className="grid grid-flow-col space-x-2 m-4 justify-stretch overflow-x-auto no-scrollbar">
           <FilterSelector
-            triggerClass="min-w-[140px]"
+            triggerClass="min-w-[125px]"
             icon={
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -196,7 +196,7 @@ export default function Home({
             onChange={setActiveCity}
           />
           <FilterSelector
-            triggerClass="min-w-[140px]"
+            triggerClass="min-w-[130px]"
             icon={
               <svg
                 xmlns="http://www.w3.org/2000/svg"
