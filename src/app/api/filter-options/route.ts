@@ -1,6 +1,14 @@
 import connectMongo from '@/utils/dbConnect';
+import { z } from 'zod';
 import { NextRequest } from 'next/server';
 import FilterOption from '@/models/FilterOption';
+
+const FilterOptionZod = z.object({
+  type: z.string(),
+  parent: z.string().optional(),
+  label: z.string(),
+  value: z.string(),
+});
 
 export async function GET(request: NextRequest) {
   await connectMongo();
@@ -23,6 +31,9 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   await connectMongo();
-
+  const reqBody = await request.json();
+  FilterOptionZod.parse(reqBody);
+  console.log("reqBody", reqBody);
+  await FilterOption.create(reqBody);
   return Response.json({ status: 'success' }, { status: 200 });
 }

@@ -29,7 +29,7 @@ function LinkRow({
   };
 
   const handleDelete = async (id: string) => {
-    let url = `/api/filter-options/${id}`;
+    let url = `/api/links/${id}`;
     const rawResponse = await fetch(url, { method: "DELETE" });
     const resData = await rawResponse.json();
     if (resData) {
@@ -45,6 +45,7 @@ function LinkRow({
   const closeModal = () => {
     setIsModalOpen(false);
   };
+  
   return (
     <>
       <Modal
@@ -121,7 +122,7 @@ function LinkRow({
             className="rounded p-1"
           >
             <option value="NONE" selected={item.featuredType === "NONE"}>
-              SELECT FEATURED TYPE
+              SELECT
             </option>
             <option value="NEW" selected={item.featuredType === "NEW"}>
               NEW

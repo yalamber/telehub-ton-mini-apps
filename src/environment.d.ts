@@ -1,6 +1,6 @@
 namespace NodeJS {
   interface ProcessEnv {
-    TG_TOKEN: string;
+    TG_BOT_TOKEN: string;
     MONGODB_URI: string;
     ATLAS_DATA_API: string;
     TG_API_HASH: string;

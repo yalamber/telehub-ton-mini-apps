@@ -6,7 +6,6 @@ const Modal = ({ title, isOpen, onClose, children } : { title: string, isOpen: a
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50">
       <div className="bg-white rounded-lg shadow-lg w-11/12 max-w-md">
-        {/* Modal Header */}
         <div className="flex justify-between items-center border-b p-4">
           <h2 className="text-xl font-semibold">{title}</h2>
           <button
@@ -16,7 +15,6 @@ const Modal = ({ title, isOpen, onClose, children } : { title: string, isOpen: a
             ×
           </button>
         </div>
-
         {children}
       </div>
     </div>

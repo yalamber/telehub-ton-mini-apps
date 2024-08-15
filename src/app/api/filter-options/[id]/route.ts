@@ -36,10 +36,10 @@ export async function DELETE(
 ) {
   await connectMongo();
   const id = params.id;
-  const link = await Link.findById(id);
-  if (!link) {
+  const document = await FilterOption.findById(id);
+  if (!document) {
     return Response.json({ status: "error" }, { status: 404 });
   }
-  await link.deleteOne();
+  await document.deleteOne();
   return Response.json({ status: "success" }, { status: 200 });
 }

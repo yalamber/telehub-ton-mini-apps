@@ -23,14 +23,15 @@ const authOptions: NextAuthOptions = {
       credentials: {},
       async authorize(credentials, req) {
         const validator = new AuthDataValidator({
-          botToken: `${process.env.TG_TOKEN}`,
+          botToken: `${process.env.TG_BOT_TOKEN}`,
         });
         const data = objectToAuthDataMap(req.query || {});
         const user = await validator.validate(data);
+        console.log("user", user)
         if (
           user.id &&
-          user.first_name &&
-          ADMIN_USERS.includes(user.id.toString())
+          user.first_name
+          // ADMIN_USERS.includes(user.id.toString())
         ) {
           const returned = {
             id: user.id.toString(),

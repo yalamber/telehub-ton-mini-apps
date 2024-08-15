@@ -44,14 +44,14 @@ export async function POST(request: Request) {
     case 'tma':
       try {
         // Validate init data.
-        validate(authData, process.env.TG_TOKEN, {
+        validate(authData, process.env.TG_BOT_TOKEN, {
           // We consider init data sign valid for 1 day from their creation moment.
           expiresIn: 3600 * 24,
         });
         const initData: InitDataParsed = parse(authData);
         const reqBody = await request.json();
         LinkZod.parse(reqBody);
-        const bot = new TelegramBot(process.env.TG_TOKEN, { polling: false });
+        const bot = new TelegramBot(process.env.TG_BOT_TOKEN, { polling: false });
         // Add link to database by querying telegram link data chatId
         const channelData = await getChannelDetails(
           reqBody.link,

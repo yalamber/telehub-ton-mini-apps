@@ -149,6 +149,7 @@ export default function Home({
     if (!firstRender) {
       fetchData();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     debouncedSearchTerm,
     activeCategory,
