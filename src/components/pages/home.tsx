@@ -124,11 +124,7 @@ export default function Home({
       vp?.expand();
     }
   }, [vp]);
-  console.log(
-    'themeParams',
-    themeParams.bgColor,
-    `bg-[${themeParams.bgColor}]`
-  );
+  console.log('themeParams', themeParams);
   return (
     <>
       <FixedLayout
@@ -141,7 +137,7 @@ export default function Home({
         <div className="flex m-4">
           <input
             type="text"
-            className="p-2 mr-2 flex-grow rounded-xl bg-transparent border border-blue-400"
+            className={`p-2 mr-2 flex-grow rounded-xl bg-transparent border border-[${themeParams.accentTextColor}]`}
             placeholder="Search"
             onChange={(e) => setSearchTerm(e.target.value)}
           />
