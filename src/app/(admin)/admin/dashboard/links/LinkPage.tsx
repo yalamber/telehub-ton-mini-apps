@@ -120,6 +120,9 @@ function LinkRow({
             onChange={(e) => updateLink({ featuredType: e.target.value })}
             className="rounded p-1"
           >
+            <option value="NONE" selected={item.featuredType === "NONE"}>
+              SELECT FEATURED TYPE
+            </option>
             <option value="NEW" selected={item.featuredType === "NEW"}>
               NEW
             </option>

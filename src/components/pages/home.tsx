@@ -1,23 +1,23 @@
-'use client';
-import { useEffect, useState } from 'react';
-import { useDebounce } from '@uidotdev/usehooks';
+"use client";
+import { useEffect, useState } from "react";
+import { useDebounce } from "@uidotdev/usehooks";
 import {
   useBackButton,
   useMainButton,
   useViewport,
   useUtils,
   useThemeParams,
-} from '@telegram-apps/sdk-react';
+} from "@telegram-apps/sdk-react";
 import {
   Avatar,
   FixedLayout,
   Section,
   Skeleton,
-} from '@telegram-apps/telegram-ui';
-import { Icon28AddCircle } from '@telegram-apps/telegram-ui/dist/icons/28/add_circle';
-import FilterSelector from '@/components/FilterSelector/FilterSelector';
-import { Link } from '@/components/Link/Link';
-import { fetchCities } from '@/utils/helpers';
+} from "@telegram-apps/telegram-ui";
+import { Icon28AddCircle } from "@telegram-apps/telegram-ui/dist/icons/28/add_circle";
+import FilterSelector from "@/components/FilterSelector/FilterSelector";
+import { Link } from "@/components/Link/Link";
+import { fetchCities } from "@/utils/helpers";
 
 interface HomeProps {
   countries: Array<any>;
@@ -25,6 +25,7 @@ interface HomeProps {
   categories: Array<any>;
   resTrendingLinks: Array<any>;
   resNewLinks: Array<any>;
+  resLinks: Array<any>;
 }
 
 export default function Home({
@@ -33,16 +34,18 @@ export default function Home({
   categories,
   resTrendingLinks,
   resNewLinks,
+  resLinks,
 }: HomeProps) {
   const bb = useBackButton(true);
   const mb = useMainButton(true);
   const vp = useViewport();
   const utils = useUtils();
   const themeParams = useThemeParams();
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [contentLoading, setContentLoading] = useState(false);
   const [trendingLinks, setTrendingLinks] = useState(resTrendingLinks ?? []);
   const [newLinks, setNewLinks] = useState(resNewLinks ?? []);
+  const [links, setLinks] = useState(resLinks ?? []);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [activeCountry, setActiveCountry] = useState<string | null>(null);
   const [activeLanguage, setActiveLanguage] = useState<string | null>(null);
@@ -85,15 +88,15 @@ export default function Home({
   }) => {
     const queryParams = new URLSearchParams();
     if (params?.debouncedSearchTerm)
-      queryParams.append('title', params.debouncedSearchTerm);
+      queryParams.append("title", params.debouncedSearchTerm);
     if (params?.activeCategory)
-      queryParams.append('category', params.activeCategory);
+      queryParams.append("category", params.activeCategory);
     if (params?.activeCountry)
-      queryParams.append('country', params.activeCountry);
-    if (params?.activeCity) queryParams.append('city', params.activeCity);
+      queryParams.append("country", params.activeCountry);
+    if (params?.activeCity) queryParams.append("city", params.activeCity);
     if (params?.activeLanguage)
-      queryParams.append('language', params.activeLanguage);
-    if (type) queryParams.append('featuredType', type);
+      queryParams.append("language", params.activeLanguage);
+    if (type) queryParams.append("featuredType", type);
     const response = await fetch(`/api/links?${queryParams}`);
     const resData = await response.json();
     const links = resData?.data;
@@ -111,16 +114,24 @@ export default function Home({
     const fetchData = async () => {
       try {
         setContentLoading(true);
-        await fetchFilteredLinks({
-          params,
-          type: 'TRENDING',
-          setLinks: setTrendingLinks,
-        });
-        await fetchFilteredLinks({
-          params,
-          type: 'NEW',
-          setLinks: setNewLinks,
-        });
+        await Promise.all([
+          fetchFilteredLinks({
+            params,
+            type: "TRENDING",
+            setLinks: setTrendingLinks,
+          }),
+          fetchFilteredLinks({
+            params,
+            type: "NEW",
+            setLinks: setNewLinks,
+          }),
+          fetchFilteredLinks({
+            params,
+            type: "NONE",
+            setLinks: setLinks,
+          })
+        ])
+        
         // TODO get all links below and also add pagination
       } catch (e) {
         console.log(e);
@@ -139,16 +150,18 @@ export default function Home({
   ]);
 
   // Link list display component for featured items
-  const LinkListDisplay = ({ links }: { links: Array<any> }) => {
+  const LinkListDisplay = ({ links, fullWidth = false }: { links: Array<any>, fullWidth?: boolean }) => {
+    const wrapperDivWidth = fullWidth || links?.length === 1  ? "w-full" : "grid gap-x-6 grid-cols-2 w-[50rem]";
+    const innerDivWidth = fullWidth || links?.length === 1 ? "w-full" : "w-[25rem]";
     return (
       <ul
-        className={`grid gap-x-6 grid-cols-2 ${
-          links?.length > 1 && 'w-[50rem]'
+        className={`${
+          wrapperDivWidth
         }`}
       >
         {links.map((item: any) => {
           return (
-            <li key={`link-${item._id}`} className="py-3 sm:pb-4 w-[25rem]">
+            <li key={`link-${item._id}`} className={`py-3 sm:pb-4 ${innerDivWidth}`}>
               <a
                 href={`https://t.me/${item.link}`}
                 onClick={(e) => {
@@ -160,7 +173,7 @@ export default function Home({
                   <div className="flex-shrink-0">
                     <Avatar
                       size={40}
-                      src={item.photo ?? ''}
+                      src={item.photo ?? ""}
                       acronym={item.title.slice(0, 1)}
                     />
                   </div>
@@ -238,7 +251,7 @@ export default function Home({
               </svg>
             }
             items={countries}
-            label={activeCountry ?? 'Countries'}
+            label={activeCountry ?? "Countries"}
             onChange={setActiveCountry}
           />
           <FilterSelector
@@ -258,7 +271,7 @@ export default function Home({
             }
             disabled={!activeCountry}
             items={cities}
-            label={activeCity ?? 'City'}
+            label={activeCity ?? "City"}
             onChange={setActiveCity}
           />
           <FilterSelector
@@ -280,7 +293,7 @@ export default function Home({
               </svg>
             }
             items={languages}
-            label={activeLanguage ?? 'Language'}
+            label={activeLanguage ?? "Language"}
             onChange={setActiveLanguage}
           />
           <FilterSelector
@@ -307,7 +320,7 @@ export default function Home({
               </svg>
             }
             items={categories}
-            label={activeCategory ?? 'Categories'}
+            label={activeCategory ?? "Categories"}
             onChange={setActiveCategory}
           />
         </div>
@@ -327,11 +340,13 @@ export default function Home({
             </div>
           </Section>
         )}
-        <Section>
-          <div className="px-5 py-5 overflow-auto hover:overflow-scroll no-scrollbar">
-            show remaining links here
-          </div>
-        </Section>
+        {links?.length > 0 && (
+          <Section header="Links">
+            <div className="px-5 py-5">
+              <LinkListDisplay fullWidth={true} links={links} />
+            </div>
+          </Section>
+        )}
       </Section>
     </Skeleton>
   );
