@@ -166,7 +166,7 @@ export default function Home({
                   </div>
                   <div className="flex-1 min-w-0">
                     <p
-                      className={`text-sm font-medium text-gray-900 truncate text-[${themeParams.linkColor}]`}
+                      className={`text-sm font-medium text-gray-900 truncate text-[${themeParams.textColor}]`}
                     >
                       {item.title}
                     </p>
