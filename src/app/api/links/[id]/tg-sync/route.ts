@@ -15,8 +15,6 @@ export async function GET(
     if (!linkData) {
       return Response.json({ status: 'not found' }, { status: 404 });
     }
-    // TODO: check updateAt and only update if last updated time is one day old
-    // TODO: add force update param based on query param
     const forceSync = request.nextUrl.searchParams.get('force-sync') === 'yes';
     if (!linkData.wasUpdatedAtLeastOneDayAgo() && !forceSync) {
       return Response.json({ status: 'Already Synced' }, { status: 401 });

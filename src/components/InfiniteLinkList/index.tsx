@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import LinkDisplay from '../LinkDisplay';
 import { Spinner } from '@telegram-apps/telegram-ui';
 
@@ -10,19 +10,20 @@ export default function InfiniteLinkList({
 }) {
   const [links, setLinks] = useState(initialLinks);
   const [hasMoreData, setHasMoreData] = useState(true);
-  const loadMore = async () => {
-    if (hasMoreData) {
-      //TODO: api call
-      const apiLinks: Array<any> = [];
-      
-      if (apiLinks.length == 0) {
-        setHasMoreData(false);
-      }
-      setLinks((prevLinks) => [...prevLinks, ...apiLinks]);
-    }
 
-    console.log('Load more called');
-  };
+  const loadMore = useCallback(() => {
+    (async () => {
+      if (hasMoreData) {
+        // TODO: api call
+        const apiLinks: Array<any> = [];
+        if (apiLinks.length == 0) {
+          setHasMoreData(false);
+        }
+        setLinks((prevLinks) => [...prevLinks, ...apiLinks]);
+      }
+      console.log('Load more called');
+    })();
+  }, []);
   const scrollTrigger = useRef(null);
 
   useEffect(() => {
@@ -46,12 +47,14 @@ export default function InfiniteLinkList({
         observer.unobserve(scrollTrigger.current);
       }
     };
-  }, [hasMoreData]);
+  }, [hasMoreData, loadMore]);
 
   return (
     <div>
       {links.map((item: any) => (
-        <LinkDisplay key={item._id} item={item} />
+        <div className="py-4" key={item._id}>
+          <LinkDisplay item={item} />
+        </div>
       ))}
       <div className="p-4">
         {hasMoreData && (

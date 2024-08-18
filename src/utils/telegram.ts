@@ -43,7 +43,6 @@ export class TelegramService {
     let memberCount: DetailReturnData['memberCount'];
     let type: DetailReturnData['type'];
     let about: DetailReturnData['about'];
-
     if (entity instanceof Api.Channel) {
       // For channels and super groups
       fullInfo = await this.client.invoke(
@@ -52,7 +51,7 @@ export class TelegramService {
         })
       );
       memberCount = (fullInfo?.fullChat as any)?.participantsCount;
-      type = 'CHANNEL';
+      type = !entity.megagroup && !entity.gigagroup ? 'CHANNEL' : 'GROUP';
       about = fullInfo?.fullChat?.about ?? '';
     } else if (entity instanceof Api.Chat) {
       // For small groups
