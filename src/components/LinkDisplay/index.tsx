@@ -24,13 +24,13 @@ export default function LinkDisplay({ item }: { item: any }) {
         </div>
         <div className="flex-1 min-w-0">
           <p
-            className={`text-sm font-medium text-gray-900 truncate`}
+            className={`font-medium text-gray-900 truncate`}
             style={{ color: themeParams.textColor }}
           >
             {item.title}
           </p>
           <p
-            className={`text-xs truncate`}
+            className={`text-sm truncate`}
             style={{ color: themeParams.textColor }}
           >
             {item.memberCount} members
