@@ -14,7 +14,7 @@ export default function InfiniteLinkList({
     if (hasMoreData) {
       //TODO: api call
       const apiLinks: Array<any> = [];
-
+      
       if (apiLinks.length == 0) {
         setHasMoreData(false);
       }

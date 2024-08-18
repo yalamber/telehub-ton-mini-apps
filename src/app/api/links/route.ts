@@ -11,7 +11,7 @@ import TelegramBot from 'node-telegram-bot-api';
 import connectMongo from '@/utils/dbConnect';
 import authOptions from '@/app/api/auth/[...nextauth]/authOptions';
 import Link from '@/models/Link';
-import { getChannelDetails, extractUsername } from '@/utils/telegram';
+import { TelegramService } from '@/utils/telegram';
 
 const LinkZod = z.object({
   link: z
@@ -51,27 +51,47 @@ export async function POST(request: Request) {
         const initData: InitDataParsed = parse(authData);
         const reqBody = await request.json();
         LinkZod.parse(reqBody);
-        const bot = new TelegramBot(process.env.TG_BOT_TOKEN, { polling: false });
-        // Add link to database by querying telegram link data chatId
-        const channelData = await getChannelDetails(
-          reqBody.link,
+        const tgService = new TelegramService(
+          parseInt(process.env.TG_API_ID),
+          process.env.TG_API_HASH,
           process.env.TG_SESSION
         );
-        await Link.create({
-          title: channelData.title,
-          // about: channelData.about,
-          type: channelData.type,
-          link: extractUsername(reqBody.link),
+        // TODO: check if link already exists
+        const link = await Link.findOne({
+          link: TelegramService.extractUsername(reqBody.link),
+        });
+        if (link) {
+          throw new Error('Link already submitted');
+        }
+        await tgService.connect();
+        // Add link to database by querying telegram link data chatId
+        const tgLinkData = await tgService.getLinkDetails(reqBody.link);
+        const linkData = {
+          link: TelegramService.extractUsername(reqBody.link),
+          title: tgLinkData.title,
+          about: tgLinkData.about,
+          type: tgLinkData.type,
           category: reqBody.category,
           country: reqBody.country,
           city: reqBody.city ?? '',
           language: reqBody.language,
-          memberCount: channelData?.memberCount,
-          photo: channelData.photo,
+          memberCount: tgLinkData?.memberCount,
           submittedBy: initData?.user?.username,
           submittedById: initData?.user?.id,
-        });
+          photo: '',
+        };
+        if (tgLinkData.entityForPhoto && tgLinkData.photoId) {
+          linkData.photo =
+            (await tgService.downloadAndSavePhoto(
+              tgLinkData.entityForPhoto,
+              tgLinkData.photoId
+            )) ?? '';
+        }
+        await Link.create(linkData);
         console.log('sending message to ', initData?.user?.username);
+        const bot = new TelegramBot(process.env.TG_BOT_TOKEN, {
+          polling: false,
+        });
         await bot.sendMessage(
           initData?.user?.id as number,
           `Thank you for submitting your link ${reqBody.link}.` +
@@ -81,9 +101,9 @@ export async function POST(request: Request) {
             `\ncategory:${reqBody.category}` +
             `\nstatus: pending`
         );
-        return Response.json({ status: 'ok', channelData });
+        return Response.json({ status: 'ok', channelData: tgLinkData });
       } catch (err: any) {
-        console.log(err);
+        console.log('ERR', err);
         if (err instanceof z.ZodError) {
           return Response.json(
             { status: 'error', issues: err.issues },
@@ -132,9 +152,7 @@ export async function GET(request: NextRequest) {
     query.status = status;
   }
 
-
   const data = await Link.find(query).lean();
 
   return Response.json({ status: 'success', data }, { status: 200 });
 }
-

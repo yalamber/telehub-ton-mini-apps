@@ -11,12 +11,12 @@ export interface Link extends mongoose.Document {
   submittedById: Number;
   memberCount: Number;
   photo: String;
+  photoId: String;
   type: 'CHANNEL' | 'GROUP';
   status: 'APPROVED' | 'PENDING' | 'NOT_APPROVED';
   featuredType: 'NONE' | 'TRENDING' | 'NEW';
 }
 
-/* PetSchema will correspond to a collection in your MongoDB database. */
 const LinkSchema = new mongoose.Schema<Link>(
   {
     link: {
@@ -60,6 +60,9 @@ const LinkSchema = new mongoose.Schema<Link>(
     photo: {
       type: String,
     },
+    photoId: {
+      type: String,
+    },
     status: {
       type: String,
       enum: ['APPROVED', 'PENDING', 'NOT_APPROVED'],
@@ -88,5 +91,11 @@ LinkSchema.index({ country: 1, city: 1 });
 LinkSchema.index({ country: 1, language: 1 });
 LinkSchema.index({ country: 1, category: 1 });
 LinkSchema.index({ status: 1, featuredType: 1 });
+
+LinkSchema.methods.wasUpdatedAtLeastOneDayAgo = function () {
+  const oneDayAgo = new Date();
+  oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+  return this.updatedAt < oneDayAgo;
+};
 
 export default mongoose.models.Link || mongoose.model<Link>('Link', LinkSchema);

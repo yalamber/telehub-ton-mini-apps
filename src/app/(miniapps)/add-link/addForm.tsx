@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-
+import Image from 'next/image';
 import {
   useLaunchParams,
   useBackButton,
@@ -16,6 +16,7 @@ import {
   Placeholder,
 } from '@telegram-apps/telegram-ui';
 import { fetchCities } from '@/utils/helpers';
+import TelegramImg from '@/app/_assets/telegram.gif';
 
 type Inputs = {
   link: string;
@@ -100,9 +101,9 @@ export default function AddForm({
         header="Oops"
         description="Application was launched with missing init data"
       >
-        <img
+        <Image
           alt="Telegram sticker"
-          src="https://xelene.me/telegram.gif"
+          src={TelegramImg}
           style={{ display: 'block', width: '144px', height: '144px' }}
         />
       </Placeholder>
@@ -114,14 +115,15 @@ export default function AddForm({
         header="Submitted"
         description="Link submitted for review by the administrators"
       >
-        <img
+        <Image
           alt="Telegram sticker"
-          src="https://xelene.me/telegram.gif"
+          src={TelegramImg}
           style={{ display: 'block', width: '144px', height: '144px' }}
         />
       </Placeholder>
     );
   }
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pb-10">
       <div>
