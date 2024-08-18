@@ -169,7 +169,7 @@ export default function Home({
     const wrapperDivWidth =
       fullWidth || links?.length === 1
         ? 'w-full'
-        : 'grid gap-x-6 grid-cols-2 w-[36rem]';
+        : 'grid gap-x-6 grid-cols-2 w-[36rem] md:w-[40rem]';
     const innerDivWidth =
       fullWidth || links?.length === 1 ? 'w-full' : 'w-[98%]';
     return (

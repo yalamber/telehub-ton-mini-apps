@@ -30,6 +30,12 @@ export default function LinkDisplay({ item }: { item: any }) {
             {item.title}
           </p>
           <p
+            className={`text-sm font-medium text-gray-900 truncate`}
+            style={{ color: themeParams.textColor }}
+          >
+            {item.about}
+          </p>
+          <p
             className={`text-sm truncate`}
             style={{ color: themeParams.textColor }}
           >

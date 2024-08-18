@@ -12,6 +12,7 @@ export async function PUT(request: NextRequest) {
   // TODO: update
   return Response.json({ status: 'success' }, { status: 200 });
 }
+
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
