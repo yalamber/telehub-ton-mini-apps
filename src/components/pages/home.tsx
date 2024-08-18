@@ -37,7 +37,6 @@ export default function Home({
   const bb = useBackButton(true);
   const mb = useMainButton(true);
   const vp = useViewport();
-  const utils = useUtils();
   const themeParams = useThemeParams();
   const firstRender = useFirstRender();
   const [searchTerm, setSearchTerm] = useState('');
@@ -166,9 +165,9 @@ export default function Home({
     const wrapperDivWidth =
       fullWidth || links?.length === 1
         ? 'w-full'
-        : 'grid gap-x-6 grid-cols-2 w-[50rem]';
+        : 'grid gap-x-6 grid-cols-2 w-[36rem]';
     const innerDivWidth =
-      fullWidth || links?.length === 1 ? 'w-full' : 'w-[90%]';
+      fullWidth || links?.length === 1 ? 'w-full' : 'w-[98%]';
     return (
       <ul className={`${wrapperDivWidth}`}>
         {links.map((item: any) => {

@@ -3,7 +3,7 @@ import { parse } from 'csv-parse';
 import fs from 'fs';
 import dbConnect from '../utils/dbConnect.ts';
 import Link from '../models/Link.ts';
-import { extractUsername } from '../utils/telegram.ts';
+import { TelegramService } from '../utils/telegram.ts';
 
 (async () => {
   await dbConnect();
@@ -22,8 +22,8 @@ import { extractUsername } from '../utils/telegram.ts';
         await Link.insertMany(
           records.map((record) => {
             return {
-              link: extractUsername(record[0]),
-              title: extractUsername(record[0]),
+              link: TelegramService.extractUsername(record[0]),
+              title: TelegramService.extractUsername(record[0]),
               category: record[1],
               country: record[2],
               city: record[3],
