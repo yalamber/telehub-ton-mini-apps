@@ -3,7 +3,6 @@ import { NextRequest } from 'next/server';
 import connectMongo from '@/utils/dbConnect';
 import { TelegramService } from '@/utils/telegram';
 import Link from '@/models/Link';
-import { link } from 'fs';
 
 export async function GET(
   request: NextRequest,
@@ -17,7 +16,9 @@ export async function GET(
       return Response.json({ status: 'not found' }, { status: 404 });
     }
     // TODO: check updateAt and only update if last updated time is one day old
-    if (!linkData.wasUpdatedAtLeastOneDayAgo()) {
+    // TODO: add force update param based on query param
+    const forceSync = request.nextUrl.searchParams.get('force-sync') === 'yes';
+    if (!linkData.wasUpdatedAtLeastOneDayAgo() && !forceSync) {
       return Response.json({ status: 'Already Synced' }, { status: 401 });
     }
     const tgService = new TelegramService(
