@@ -52,7 +52,7 @@ export default function InfiniteLinkList({
   return (
     <div>
       {links.map((item: any) => (
-        <div className="py-4" key={item._id}>
+        <div className="pb-4" key={item._id}>
           <LinkDisplay item={item} />
         </div>
       ))}
