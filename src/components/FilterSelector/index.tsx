@@ -36,7 +36,6 @@ const FilterSelector = ({
           after={
             <button
               onClick={() => {
-                onChange(null);
                 setIsOpen(false);
               }}
             >
@@ -44,9 +43,7 @@ const FilterSelector = ({
             </button>
           }
         >
-          <Placeholder description="Description" header="Title">
-            {label}
-          </Placeholder>
+          {label}
         </Modal.Header>
       }
       onOpenChange={(open) => {

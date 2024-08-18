@@ -58,7 +58,7 @@ export default function InfiniteLinkList({
       ))}
       <div className="p-4">
         {hasMoreData && (
-          <div ref={scrollTrigger}>
+          <div ref={scrollTrigger} className="flex justify-center">
             <Spinner size="m" />
           </div>
         )}

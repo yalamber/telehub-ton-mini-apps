@@ -5,10 +5,14 @@ import {
   useBackButton,
   useMainButton,
   useViewport,
-  useUtils,
   useThemeParams,
 } from '@telegram-apps/sdk-react';
-import { FixedLayout, Section, Skeleton } from '@telegram-apps/telegram-ui';
+import {
+  FixedLayout,
+  Section,
+  Skeleton,
+  Spinner,
+} from '@telegram-apps/telegram-ui';
 import { Icon28AddCircle } from '@telegram-apps/telegram-ui/dist/icons/28/add_circle';
 import LinkDisplay from '@/components/LinkDisplay';
 import FilterSelector from '@/components/FilterSelector';
@@ -145,7 +149,7 @@ export default function Home({
     if (!firstRender) {
       fetchData();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     debouncedSearchTerm,
     activeCategory,
@@ -185,7 +189,7 @@ export default function Home({
   };
 
   return (
-    <Skeleton visible={contentLoading}>
+    <>
       <FixedLayout
         vertical="top"
         style={{
@@ -300,6 +304,11 @@ export default function Home({
         </div>
       </FixedLayout>
       <Section className="mt-32">
+        {contentLoading && (
+          <div className="flex justify-center">
+            <Spinner size="m" />
+          </div>
+        )}
         {trendingLinks?.length > 0 && (
           <Section header="Trending">
             <div className="px-5 pb-4 overflow-auto hover:overflow-scroll no-scrollbar">
@@ -322,6 +331,6 @@ export default function Home({
           </Section>
         )}
       </Section>
-    </Skeleton>
+    </>
   );
 }
