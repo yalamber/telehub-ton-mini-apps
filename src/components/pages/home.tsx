@@ -106,10 +106,6 @@ export default function Home({
   };
 
   useEffect(() => {
-    console.log('This is run once');
-  }, []);
-
-  useEffect(() => {
     const params = {
       debouncedSearchTerm,
       activeCategory,
@@ -117,6 +113,7 @@ export default function Home({
       activeCity,
       activeLanguage,
     };
+
     const fetchData = async () => {
       try {
         setContentLoading(true);
@@ -145,7 +142,6 @@ export default function Home({
         setContentLoading(false);
       }
     };
-    console.log('firstRender', firstRender);
     if (!firstRender) {
       fetchData();
     }
@@ -310,14 +306,32 @@ export default function Home({
           </div>
         )}
         {trendingLinks?.length > 0 && (
-          <Section header="Trending">
+          <Section
+            header={
+              <div className="flex justify-between px-4 py-2">
+                <Link href="/see-all/trending">
+                  <h2 className={`font-bold`}>Trending</h2>
+                </Link>
+                <Link href="/see-all/trending">See all</Link>
+              </div>
+            }
+          >
             <div className="px-5 pb-4 overflow-auto hover:overflow-scroll no-scrollbar">
               <LinkListDisplay links={trendingLinks} />
             </div>
           </Section>
         )}
         {newLinks?.length > 0 && (
-          <Section header="New">
+          <Section
+            header={
+              <div className="flex justify-between px-4 py-2">
+                <Link href="/see-all/new">
+                  <h2 className={`font-bold`}>New</h2>
+                </Link>
+                <Link href="/see-all/new">See all</Link>
+              </div>
+            }
+          >
             <div className="px-5 pb-4 overflow-auto hover:overflow-scroll no-scrollbar">
               <LinkListDisplay links={newLinks} />
             </div>
@@ -325,7 +339,7 @@ export default function Home({
         )}
         {links?.length > 0 && (
           <Section header="Links">
-            <div className="px-5 py-5">
+            <div className="px-5 py-2">
               <InfiniteLinkList initialLinks={links} />
             </div>
           </Section>
