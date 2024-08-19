@@ -44,7 +44,7 @@ export async function POST(request: Request) {
   switch (authType) {
     case 'tma':
       try {
-        // Validate init data.
+        // validate init data.
         validate(authData, process.env.TG_BOT_TOKEN, {
           // We consider init data sign valid for 1 day from their creation moment.
           expiresIn: 3600 * 24,
