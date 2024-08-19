@@ -1,3 +1,4 @@
+import { Types } from 'mongoose';
 import { headers } from 'next/headers';
 import { NextRequest } from 'next/server';
 import { getServerSession } from 'next-auth';
@@ -128,8 +129,12 @@ export async function GET(request: NextRequest) {
   await connectMongo();
   const session = await getServerSession(authOptions);
   const { searchParams } = request.nextUrl;
-  const query: Record<string, string | { $regex: string; $options: string }> =
-    {};
+  const query: Record<
+    string,
+    | string
+    | { $regex: string; $options: string }
+    | { [x: string]: Types.ObjectId }
+  > = {};
   const search = searchParams.get('search');
   const category = searchParams.get('category');
   const country = searchParams.get('country');
@@ -141,6 +146,11 @@ export async function GET(request: NextRequest) {
     query.title = { $regex: search, $options: 'i' };
     query.link = { $regex: search, $options: 'i' };
   }
+  // Pagination parameters
+  const limit = parseInt(searchParams.get('limit') || '10', 10);
+  const cursor = searchParams.get('cursor');
+  const direction = searchParams.get('direction') || 'next';
+
   if (category) query.category = category;
   if (country) query.country = country;
   if (city) query.city = city;
@@ -150,7 +160,42 @@ export async function GET(request: NextRequest) {
   if (session && status) {
     query.status = status;
   }
-  const data = await Link.find(query).lean();
+  // Add cursor to query
+  if (cursor) {
+    const operator = direction === 'prev' ? '$gt' : '$lt';
+    query._id = { [operator]: new Types.ObjectId(cursor) };
+  }
 
-  return Response.json({ status: 'success', data }, { status: 200 });
+  const data: Array<any> = await Link.find(query)
+    .sort({ _id: direction === 'prev' ? 1 : -1 })
+    .limit(limit + 1)
+    .lean();
+
+  // Determine if there's a next/previous page
+  const hasMore = data.length > limit;
+  if (hasMore) {
+    data.pop(); // Remove the extra item
+  }
+
+  // If we're paginating backwards, reverse the order of results
+  if (direction === 'prev') {
+    data.reverse();
+  }
+
+  // Get the next cursor
+  const nextCursor = hasMore ? data[data.length - 1]._id.toString() : null;
+  const prevCursor = data.length > 0 ? data[0]._id.toString() : null;
+
+  return Response.json(
+    {
+      status: 'success',
+      data,
+      pagination: {
+        nextCursor,
+        prevCursor,
+        hasMore,
+      },
+    },
+    { status: 200 }
+  );
 }

@@ -172,10 +172,20 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(false);
   const [filterStatus, setFilterStatus] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [paginationData, setPaginationData] = useState({
+    nextCursor: '',
+    prevCursor: '',
+    hasMore: false,
+  });
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
   const fetchLinks = useCallback(
-    (filterStatus?: string, searchTerm?: string) => {
+    (
+      filterStatus?: string,
+      searchTerm?: string,
+      cursor?: string,
+      direction?: string
+    ) => {
       (async () => {
         setLoading(true);
         let url = '/api/links';
@@ -186,10 +196,18 @@ export default function AdminPage() {
         if (searchTerm) {
           queryParams.append('search', searchTerm);
         }
+        if (cursor) {
+          queryParams.append('cursor', cursor);
+        }
+        if (direction) {
+          queryParams.append('direction', direction);
+        }
         const response = await fetch(`${url}?${queryParams}`);
         const resData = await response.json();
         const links = resData?.data;
+        const paginationData = resData?.pagination;
         setLinks(links);
+        setPaginationData(paginationData);
         setLoading(false);
       })();
     },
@@ -302,6 +320,20 @@ export default function AdminPage() {
                   ))}
                 </tbody>
               </table>
+              <div className="p-5 flex justify-between">
+                <button
+                  className="bg-slate-300 rounded-lg p-2"
+                  onClick={() => {}}
+                >
+                  Prev
+                </button>
+                <button
+                  className="bg-slate-300 rounded-lg p-2"
+                  onClick={() => {}}
+                >
+                  Next
+                </button>
+              </div>
               {loading && 'Loading...'}
             </div>
           </div>
