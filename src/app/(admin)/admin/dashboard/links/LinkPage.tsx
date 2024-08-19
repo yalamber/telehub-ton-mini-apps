@@ -1,43 +1,49 @@
-"use client";
-import { useCallback, useEffect, useState } from "react";
-import Modal from "../../components/Modal";
-import Link from "next/link";
+'use client';
+import { useCallback, useEffect, useState } from 'react';
+import { useDebounce } from '@uidotdev/usehooks';
+
+import Modal from '../../components/Modal';
+import Link from 'next/link';
+import { search } from '@inquirer/prompts';
 
 function LinkRow({
   item,
   fetchLinks,
   filterStatus,
+  searchTerm,
 }: {
   item: any;
-  fetchLinks: (filterStatus: string) => void;
-  filterStatus: string;
+  fetchLinks: (filterStatus?: string, searchTerm?: string) => void;
+  filterStatus?: string;
+  searchTerm?: string;
 }) {
   const updateLink = async (data: any) => {
     let url = `/api/filter-options/${item._id}`;
     const rawResponse = await fetch(url, {
-      method: "PUT",
+      method: 'PUT',
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
     });
     const resData = await rawResponse.json();
     if (resData) {
-      fetchLinks(filterStatus);
+      fetchLinks(filterStatus, searchTerm);
     }
   };
 
   const handleDelete = async (id: string) => {
     let url = `/api/links/${id}`;
-    const rawResponse = await fetch(url, { method: "DELETE" });
+    const rawResponse = await fetch(url, { method: 'DELETE' });
     const resData = await rawResponse.json();
     if (resData) {
-      fetchLinks(filterStatus);
+      fetchLinks(filterStatus, searchTerm);
     }
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -45,7 +51,7 @@ function LinkRow({
   const closeModal = () => {
     setIsModalOpen(false);
   };
-  
+
   return (
     <>
       <Modal
@@ -60,7 +66,10 @@ function LinkRow({
           >
             Cancel
           </button>
-          <button onClick={() => handleDelete(item?._id)} className="bg-blue-500 text-white rounded px-4 py-2">
+          <button
+            onClick={() => handleDelete(item?._id)}
+            className="bg-blue-500 text-white rounded px-4 py-2"
+          >
             Delete
           </button>
         </div>
@@ -102,15 +111,15 @@ function LinkRow({
             onChange={(e) => updateLink({ status: e.target.value })}
             className="rounded p-1"
           >
-            <option value="PENDING" selected={item.status === "PENDING"}>
+            <option value="PENDING" selected={item.status === 'PENDING'}>
               PENDING
             </option>
-            <option value="APPROVED" selected={item.status === "APPROVED"}>
+            <option value="APPROVED" selected={item.status === 'APPROVED'}>
               APPROVED
             </option>
             <option
               value="NOT_APPROVED"
-              selected={item.status === "NOT_APPROVED"}
+              selected={item.status === 'NOT_APPROVED'}
             >
               NOT APPROVED
             </option>
@@ -121,22 +130,22 @@ function LinkRow({
             onChange={(e) => updateLink({ featuredType: e.target.value })}
             className="rounded p-1"
           >
-            <option value="NONE" selected={item.featuredType === "NONE"}>
+            <option value="NONE" selected={item.featuredType === 'NONE'}>
               SELECT
             </option>
-            <option value="NEW" selected={item.featuredType === "NEW"}>
+            <option value="NEW" selected={item.featuredType === 'NEW'}>
               NEW
             </option>
             <option
               value="TRENDING"
-              selected={item.featuredType === "TRENDING"}
+              selected={item.featuredType === 'TRENDING'}
             >
               TRENDING
             </option>
           </select>
         </td>
         <td className="p-4 whitespace-nowrap">
-          <div title="Delete" onClick={openModal} style={{ cursor: "pointer" }}>
+          <div title="Delete" onClick={openModal} style={{ cursor: 'pointer' }}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -161,26 +170,35 @@ function LinkRow({
 export default function AdminPage() {
   const [links, setLinks] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [filterStatus, setFilterStatus] = useState("");
+  const [filterStatus, setFilterStatus] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
-  const fetchLinks = useCallback((filterStatus: string) => {
-    (async () => {
-      setLoading(true);
-      let url = "/api/links";
-      if (filterStatus) {
-        url += `?status=${filterStatus}`;
-      }
-      const response = await fetch(url);
-      const resData = await response.json();
-      const links = resData?.data;
-      setLinks(links);
-      setLoading(false);
-    })();
-  }, []);
+  const fetchLinks = useCallback(
+    (filterStatus?: string, searchTerm?: string) => {
+      (async () => {
+        setLoading(true);
+        let url = '/api/links';
+        const queryParams = new URLSearchParams();
+        if (filterStatus) {
+          queryParams.append('status', filterStatus);
+        }
+        if (searchTerm) {
+          queryParams.append('search', searchTerm);
+        }
+        const response = await fetch(`${url}?${queryParams}`);
+        const resData = await response.json();
+        const links = resData?.data;
+        setLinks(links);
+        setLoading(false);
+      })();
+    },
+    []
+  );
 
   useEffect(() => {
-    fetchLinks(filterStatus);
-  }, [fetchLinks, filterStatus]);
+    fetchLinks(filterStatus, debouncedSearchTerm);
+  }, [fetchLinks, filterStatus, debouncedSearchTerm]);
 
   return (
     <div className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 sm:p-6 dark:bg-gray-800">
@@ -206,6 +224,13 @@ export default function AdminPage() {
             <option value="APPROVED">APPROVED</option>
             <option value="NOT_APPROVED">NOT APPROVED</option>
           </select>
+          <input
+            type="text"
+            name="q"
+            placeholder="Search"
+            className="rounded p-1 ml-1"
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
       </div>
       <div className="flex flex-col mt-6">
@@ -272,11 +297,12 @@ export default function AdminPage() {
                       item={item}
                       fetchLinks={fetchLinks}
                       filterStatus={filterStatus}
+                      searchTerm={searchTerm}
                     />
                   ))}
                 </tbody>
               </table>
-              {loading && "Loading..."}
+              {loading && 'Loading...'}
             </div>
           </div>
         </div>
