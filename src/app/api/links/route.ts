@@ -93,6 +93,7 @@ export async function POST(request: Request) {
         const bot = new TelegramBot(process.env.TG_BOT_TOKEN, {
           polling: false,
         });
+        // send bot message to submitter
         await bot.sendMessage(
           initData?.user?.id as number,
           `Thank you for submitting your link ${reqBody.link}.` +
