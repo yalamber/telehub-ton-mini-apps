@@ -29,7 +29,7 @@ const FilterSelector = ({
   const [isOpen, setIsOpen] = useState(false);
   return (
     <Modal
-      className="z-20"
+      className="z-20 top-0"
       open={isOpen}
       header={
         <Modal.Header
