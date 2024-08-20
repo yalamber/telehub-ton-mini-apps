@@ -12,9 +12,11 @@ async function getData() {
     await Promise.all([
       ...filterTypes.map((type) => FilterOption.find({ type }).lean()),
       // TODO: order both queries by last modified date
-      Link.find({ featuredType: 'TRENDING' }).limit(10).lean(),
-      Link.find({ featuredType: 'NEW' }).limit(10).lean(),
-      Link.find({ featuredType: 'NONE' }).limit(10).lean(),
+      Link.find({ featuredType: 'TRENDING', status: 'APPROVED' })
+        .limit(10)
+        .lean(),
+      Link.find({ featuredType: 'NEW', status: 'APPROVED' }).limit(10).lean(),
+      Link.find({ featuredType: 'NONE', status: 'APPROVED' }).limit(10).lean(),
     ]);
 
   return { categories, countries, languages, trendingLinks, newLinks, links };
