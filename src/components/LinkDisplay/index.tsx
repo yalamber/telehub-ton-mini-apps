@@ -44,7 +44,7 @@ export default function LinkDisplay({ item }: { item: any }) {
         </div>
         <div className="inline-flex items-center text-base">
           <span
-            className={`font-medium px-2.5 py-1 rounded-xl`}
+            className={`font-sm px-2.5 py-1 rounded-xl`}
             style={{
               background: themeParams.accentTextColor,
               color: themeParams.bgColor,

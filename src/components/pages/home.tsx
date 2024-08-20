@@ -28,6 +28,7 @@ interface HomeProps {
   resTrendingLinks: Array<any>;
   resNewLinks: Array<any>;
   resLinks: Array<any>;
+  nextCursor: string;
 }
 
 export default function Home({
@@ -37,6 +38,7 @@ export default function Home({
   resTrendingLinks,
   resNewLinks,
   resLinks,
+  nextCursor,
 }: HomeProps) {
   const bb = useBackButton(true);
   const mb = useMainButton(true);
@@ -352,7 +354,10 @@ export default function Home({
         {links?.length > 0 && (
           <Section header="Links">
             <div className="px-5 py-2">
-              <InfiniteLinkList initialLinks={links} />
+              <InfiniteLinkList
+                initialLinks={links}
+                initialNextCursor={nextCursor}
+              />
             </div>
           </Section>
         )}

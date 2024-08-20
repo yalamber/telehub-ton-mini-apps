@@ -1,29 +1,35 @@
 'use client';
 import { useEffect, useState, useCallback, useRef } from 'react';
-import LinkDisplay from '../LinkDisplay';
 import { Spinner } from '@telegram-apps/telegram-ui';
+import LinkDisplay from '../LinkDisplay';
 
 export default function InfiniteLinkList({
   initialLinks,
+  initialNextCursor,
 }: {
   initialLinks: Array<any>;
+  initialNextCursor: string | null;
 }) {
   const [links, setLinks] = useState(initialLinks);
-  const [hasMoreData, setHasMoreData] = useState(true);
+  const [nextCursor, setNextCursor] = useState(initialNextCursor);
+  const [isLoading, setIsLoading] = useState(false);
 
   const loadMore = useCallback(() => {
+    if (!nextCursor || isLoading) return;
+
+    setIsLoading(true);
+
     (async () => {
-      if (hasMoreData) {
-        // TODO: api call
-        const apiLinks: Array<any> = [];
-        if (apiLinks.length == 0) {
-          setHasMoreData(false);
-        }
-        setLinks((prevLinks) => [...prevLinks, ...apiLinks]);
+      const response = await fetch(`/api/links?cursor=${nextCursor}&limit=10`);
+      const data = await response.json();
+      if (data.status === 'success') {
+        setLinks((prevLinks) => [...prevLinks, ...data.data]);
+        setNextCursor(data.pagination.nextCursor);
+      } else {
+        console.error('Failed to fetch more links:', data);
       }
-      console.log('Load more called');
     })();
-  }, []);
+  }, [nextCursor, isLoading]);
   const scrollTrigger = useRef(null);
 
   useEffect(() => {
@@ -47,7 +53,7 @@ export default function InfiniteLinkList({
         observer.unobserve(scrollTrigger.current);
       }
     };
-  }, [hasMoreData, loadMore]);
+  }, [loadMore]);
 
   return (
     <div>
@@ -57,9 +63,9 @@ export default function InfiniteLinkList({
         </div>
       ))}
       <div className="p-4">
-        {hasMoreData && (
+        {nextCursor && (
           <div ref={scrollTrigger} className="flex justify-center">
-            <Spinner size="m" />
+            {isLoading ? <Spinner size="m" /> : null}
           </div>
         )}
       </div>

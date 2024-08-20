@@ -174,7 +174,7 @@ export async function GET(request: NextRequest) {
   }
 
   const data: Array<any> = await Link.find(query)
-    .sort({ _id: direction === 'prev' ? 1 : -1 })
+    .sort({ createdAt: direction === 'prev' ? 1 : -1 })
     .limit(limit + 1)
     .lean();
 
