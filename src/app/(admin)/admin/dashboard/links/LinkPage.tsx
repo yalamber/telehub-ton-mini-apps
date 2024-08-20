@@ -321,36 +321,40 @@ export default function AdminPage() {
                 </tbody>
               </table>
               <div className="p-5 flex justify-between">
-                {paginationData.prevCursor && (
-                  <button
-                    className="bg-slate-300 rounded-lg p-2"
-                    onClick={() => {
-                      fetchLinks(
-                        filterStatus,
-                        searchTerm,
-                        paginationData.prevCursor,
-                        'prev'
-                      );
-                    }}
-                  >
-                    Prev
-                  </button>
-                )}
-                {paginationData.nextCursor && (
-                  <button
-                    className="bg-slate-300 rounded-lg p-2"
-                    onClick={() => {
-                      fetchLinks(
-                        filterStatus,
-                        searchTerm,
-                        paginationData.nextCursor,
-                        'next'
-                      );
-                    }}
-                  >
-                    Next
-                  </button>
-                )}
+                <div>
+                  {paginationData.prevCursor && (
+                    <button
+                      className="bg-slate-300 rounded-lg p-2"
+                      onClick={() => {
+                        fetchLinks(
+                          filterStatus,
+                          searchTerm,
+                          paginationData.prevCursor,
+                          'prev'
+                        );
+                      }}
+                    >
+                      Prev
+                    </button>
+                  )}
+                </div>
+                <div>
+                  {paginationData.nextCursor && (
+                    <button
+                      className="bg-slate-300 rounded-lg p-2"
+                      onClick={() => {
+                        fetchLinks(
+                          filterStatus,
+                          searchTerm,
+                          paginationData.nextCursor,
+                          'next'
+                        );
+                      }}
+                    >
+                      Next
+                    </button>
+                  )}
+                </div>
               </div>
               {loading && 'Loading...'}
             </div>
