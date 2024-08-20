@@ -4,7 +4,9 @@ import Link from '@/models/Link';
 
 async function getData(type: 'TRENDING' | 'NEW' | 'NONE') {
   await connectMongo();
-  const links = await Link.find({ featuredType: type }).limit(10).lean();
+  const links = await Link.find({ featuredType: type, status: 'APPROVED' })
+    .limit(10)
+    .lean();
   return { links };
 }
 
