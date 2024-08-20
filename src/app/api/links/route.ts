@@ -159,8 +159,12 @@ export async function GET(request: NextRequest) {
   if (language) query.language = language;
   if (featuredType) query.featuredType = featuredType;
   // Allow filter by status to only logged in users
-  if (session && status) {
-    query.status = status;
+  if (session) {
+    if (status) {
+      query.status = status;
+    }
+  } else {
+    query.status = 'APPROVED';
   }
 
   // Add cursor to query
