@@ -130,12 +130,9 @@ export async function GET(request: NextRequest) {
   await connectMongo();
   const session = await getServerSession(authOptions);
   const { searchParams } = request.nextUrl;
-  const query: Record<
-    string,
-    | string
-    | { $regex: string; $options: string }
-    | { [x: string]: Types.ObjectId }
-  > = {};
+  const query: Record<string, any> = {};
+
+  // Extract search parameters
   const search = searchParams.get('search');
   const category = searchParams.get('category');
   const country = searchParams.get('country');
@@ -143,24 +140,29 @@ export async function GET(request: NextRequest) {
   const language = searchParams.get('language');
   const status = searchParams.get('status');
   const featuredType = searchParams.get('featuredType');
-  if (search) {
-    query.title = { $regex: search, $options: 'i' };
-    query.link = { $regex: search, $options: 'i' };
-  }
+
   // Pagination parameters
   const limit = parseInt(searchParams.get('limit') || '10', 10);
   const cursor = searchParams.get('cursor');
   const direction = searchParams.get('direction') || 'next';
 
+  // Build query
+  if (search) {
+    query.$or = [
+      { title: { $regex: search, $options: 'i' } },
+      { link: { $regex: search, $options: 'i' } },
+    ];
+  }
   if (category) query.category = category;
   if (country) query.country = country;
   if (city) query.city = city;
   if (language) query.language = language;
   if (featuredType) query.featuredType = featuredType;
-  // allow filter by status to only logged in users
+  // Allow filter by status to only logged in users
   if (session && status) {
     query.status = status;
   }
+
   // Add cursor to query
   if (cursor) {
     const operator = direction === 'prev' ? '$gt' : '$lt';
@@ -185,7 +187,7 @@ export async function GET(request: NextRequest) {
 
   // Get the next cursor
   const nextCursor = hasMore ? data[data.length - 1]._id.toString() : null;
-  const prevCursor = data.length > 0 ? data[0]._id.toString() : null;
+  const prevCursor = cursor ? data[0]._id.toString() : null;
 
   return Response.json(
     {
