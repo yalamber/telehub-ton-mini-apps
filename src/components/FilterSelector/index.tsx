@@ -65,7 +65,12 @@ const FilterSelector = ({
         </Button>
       }
     >
-      <div className="m-2 px-5">
+      <div
+        className="m-2 px-5"
+        style={{
+          ...modalContainerStyle,
+        }}
+      >
         <List
           className="cursor-pointer"
           onClick={() => {
