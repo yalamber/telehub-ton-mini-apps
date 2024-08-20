@@ -31,7 +31,7 @@ const FilterSelector = ({
   const [isOpen, setIsOpen] = useState(false);
   return (
     <Modal
-      className="z-20 top-0 h-full"
+      className="z-20 top-0 bottom-0 h-full"
       style={modalContainerStyle}
       open={isOpen}
       header={
