@@ -208,6 +208,9 @@ export default function Home({
         <div className="grid grid-flow-col space-x-2 m-4 justify-stretch overflow-x-auto no-scrollbar">
           <FilterSelector
             triggerClass="min-w-[125px]"
+            modalContainerStyle={{
+              background: themeParams.bgColor,
+            }}
             icon={
               <svg
                 xmlns="http://www.w3.org/2000/svg"
