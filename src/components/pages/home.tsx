@@ -229,6 +229,9 @@ export default function Home({
             onChange={setActiveCountry}
           />
           <FilterSelector
+            modalContainerStyle={{
+              background: themeParams.bgColor,
+            }}
             triggerClass="min-w-[90px]"
             icon={
               <svg
@@ -250,6 +253,9 @@ export default function Home({
           />
           <FilterSelector
             triggerClass="min-w-[130px]"
+            modalContainerStyle={{
+              background: themeParams.bgColor,
+            }}
             icon={
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -272,6 +278,9 @@ export default function Home({
           />
           <FilterSelector
             triggerClass="min-w-[140px]"
+            modalContainerStyle={{
+              background: themeParams.bgColor,
+            }}
             icon={
               <svg
                 xmlns="http://www.w3.org/2000/svg"

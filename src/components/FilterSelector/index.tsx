@@ -16,6 +16,7 @@ interface FilterProps {
   onChange: (value: string | null) => void;
   disabled?: boolean;
   triggerClass?: string;
+  modalContainerStyle?: any;
 }
 
 const FilterSelector = ({
@@ -25,11 +26,13 @@ const FilterSelector = ({
   disabled = false,
   onChange,
   triggerClass,
+  modalContainerStyle,
 }: FilterProps) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <Modal
       className="z-20 top-0"
+      style={modalContainerStyle}
       open={isOpen}
       header={
         <Modal.Header
