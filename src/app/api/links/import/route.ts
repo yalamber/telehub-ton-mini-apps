@@ -37,6 +37,7 @@ export async function POST(request: Request) {
       city: reqBody.city.trim() ?? '',
       language: reqBody.language.trim(),
       memberCount: tgLinkData?.memberCount,
+      featuredType: 'NONE',
       submittedBy: 'admin',
       submittedById: '1253120502',
       status: 'APPROVED',

@@ -143,7 +143,6 @@ export async function GET(request: NextRequest) {
   // Pagination parameters
   const limit = parseInt(searchParams.get('limit') || '10', 10);
   const cursor = searchParams.get('cursor');
-  const direction = searchParams.get('direction') || 'next';
 
   // Build query
   if (search) {
