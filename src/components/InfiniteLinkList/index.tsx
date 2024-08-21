@@ -8,7 +8,7 @@ export default function InfiniteLinkList({
   initialNextCursor,
 }: {
   initialLinks: Array<any>;
-  initialNextCursor: string | null;
+  initialNextCursor?: string | null;
 }) {
   const [links, setLinks] = useState(initialLinks);
   const [nextCursor, setNextCursor] = useState(initialNextCursor);
