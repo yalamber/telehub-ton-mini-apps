@@ -131,7 +131,6 @@ export async function GET(request: NextRequest) {
   const session = await getServerSession(authOptions);
   const { searchParams } = request.nextUrl;
   const query: Record<string, any> = {};
-
   // Extract search parameters
   const search = searchParams.get('search');
   const category = searchParams.get('category');
@@ -169,29 +168,21 @@ export async function GET(request: NextRequest) {
 
   // Add cursor to query
   if (cursor) {
-    const operator = direction === 'prev' ? '$gt' : '$lt';
-    query._id = { [operator]: new Types.ObjectId(cursor) };
+    query._id = { $gt: new Types.ObjectId(cursor) };
   }
 
   const data: Array<any> = await Link.find(query)
-    .sort({ createdAt: direction === 'prev' ? 1 : -1 })
+    .sort({ _id: 1 })
     .limit(limit + 1)
     .lean();
 
   // Determine if there's a next/previous page
   const hasMore = data.length > limit;
+
   if (hasMore) {
     data.pop(); // Remove the extra item
   }
-
-  // If we're paginating backwards, reverse the order of results
-  if (direction === 'prev') {
-    data.reverse();
-  }
-
-  // Get the next cursor
   const nextCursor = hasMore ? data[data.length - 1]._id.toString() : null;
-  const prevCursor = cursor ? data[0]._id.toString() : null;
 
   return Response.json(
     {
@@ -199,7 +190,6 @@ export async function GET(request: NextRequest) {
       data,
       pagination: {
         nextCursor,
-        prevCursor,
         hasMore,
       },
     },

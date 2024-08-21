@@ -39,6 +39,7 @@ export async function POST(request: Request) {
       memberCount: tgLinkData?.memberCount,
       submittedBy: 'admin',
       submittedById: '1253120502',
+      status: 'APPROVED',
       photo: '',
     };
     if (tgLinkData.entityForPhoto && tgLinkData.photoId) {

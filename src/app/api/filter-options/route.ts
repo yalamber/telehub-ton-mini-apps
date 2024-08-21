@@ -2,6 +2,9 @@ import connectMongo from '@/utils/dbConnect';
 import { z } from 'zod';
 import { NextRequest } from 'next/server';
 import FilterOption from '@/models/FilterOption';
+import { getServerSession } from "next-auth";
+import authOptions from "@/app/api/auth/[...nextauth]/authOptions";
+
 
 const FilterOptionZod = z.object({
   type: z.string(),
@@ -31,6 +34,10 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   await connectMongo();
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return Response.json({ status: "error" }, { status: 401 });
+  }
   const reqBody = await request.json();
   FilterOptionZod.parse(reqBody);
   console.log("reqBody", reqBody);

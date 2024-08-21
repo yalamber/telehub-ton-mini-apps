@@ -1,10 +1,9 @@
 'use client';
 import { useCallback, useEffect, useState } from 'react';
 import { useDebounce } from '@uidotdev/usehooks';
+import Link from 'next/link';
 
 import Modal from '../../components/Modal';
-import Link from 'next/link';
-import { search } from '@inquirer/prompts';
 
 function LinkRow({
   item,
@@ -18,7 +17,7 @@ function LinkRow({
   searchTerm?: string;
 }) {
   const updateLink = async (data: any) => {
-    let url = `/api/filter-options/${item._id}`;
+    let url = `/api/links/${item._id}`;
     const rawResponse = await fetch(url, {
       method: 'PUT',
       headers: {
@@ -168,24 +167,18 @@ function LinkRow({
 }
 
 export default function AdminPage() {
-  const [links, setLinks] = useState([]);
+  const [links, setLinks] = useState<Array<any>>([]);
   const [loading, setLoading] = useState(false);
   const [filterStatus, setFilterStatus] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [paginationData, setPaginationData] = useState({
     nextCursor: '',
-    prevCursor: '',
     hasMore: false,
   });
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
   const fetchLinks = useCallback(
-    (
-      filterStatus?: string,
-      searchTerm?: string,
-      cursor?: string,
-      direction?: string
-    ) => {
+    (filterStatus?: string, searchTerm?: string, cursor?: string) => {
       (async () => {
         setLoading(true);
         let url = '/api/links';
@@ -199,9 +192,6 @@ export default function AdminPage() {
         if (cursor) {
           queryParams.append('cursor', cursor);
         }
-        if (direction) {
-          queryParams.append('direction', direction);
-        }
         const response = await fetch(`${url}?${queryParams}`);
         const resData = await response.json();
         const links = resData?.data;
@@ -213,6 +203,28 @@ export default function AdminPage() {
     },
     []
   );
+
+  async function loadMore(cursor: string) {
+    setLoading(true);
+    let url = '/api/links';
+    const queryParams = new URLSearchParams();
+    if (filterStatus) {
+      queryParams.append('status', filterStatus);
+    }
+    if (searchTerm) {
+      queryParams.append('search', searchTerm);
+    }
+    if (cursor) {
+      queryParams.append('cursor', cursor);
+    }
+    const response = await fetch(`${url}?${queryParams}`);
+    const resData = await response.json();
+    const resLinks = resData?.data;
+    const paginationData = resData?.pagination;
+    setLinks([...links, ...resLinks]);
+    setPaginationData(paginationData);
+    setLoading(false);
+  }
 
   useEffect(() => {
     fetchLinks(filterStatus, debouncedSearchTerm);
@@ -325,38 +337,16 @@ export default function AdminPage() {
                   ))}
                 </tbody>
               </table>
-              <div className="p-5 flex justify-between">
-                <div>
-                  {paginationData.prevCursor && (
-                    <button
-                      className="bg-slate-300 rounded-lg p-2"
-                      onClick={() => {
-                        fetchLinks(
-                          filterStatus,
-                          searchTerm,
-                          paginationData.prevCursor,
-                          'prev'
-                        );
-                      }}
-                    >
-                      Prev
-                    </button>
-                  )}
-                </div>
+              <div className="p-5 flex items-center">
                 <div>
                   {paginationData.nextCursor && (
                     <button
                       className="bg-slate-300 rounded-lg p-2"
-                      onClick={() => {
-                        fetchLinks(
-                          filterStatus,
-                          searchTerm,
-                          paginationData.nextCursor,
-                          'next'
-                        );
+                      onClick={async () => {
+                        await loadMore(paginationData.nextCursor);
                       }}
                     >
-                      Next
+                      Load More
                     </button>
                   )}
                 </div>
