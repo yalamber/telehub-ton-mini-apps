@@ -32,6 +32,9 @@ dependencies:
   '@tonconnect/ui-react':
     specifier: ^2.0.5
     version: 2.0.6(react-dom@18.3.1)(react@18.3.1)
+  '@types/papaparse':
+    specifier: ^5.3.14
+    version: 5.3.14
   '@uidotdev/usehooks':
     specifier: ^2.4.1
     version: 2.4.1(react-dom@18.3.1)(react@18.3.1)
@@ -1046,6 +1049,12 @@ packages:
     resolution: {integrity: sha512-bm6EG6/pCpkxDf/0gDNDdtDILMOHgaQBVOJGdwsqClnxA3xL6jtMv76rLBc006RVMWbmaf0xbmom4Z/5o2nRkQ==}
     dependencies:
       undici-types: 6.13.0
+    dev: false
+
+  /@types/papaparse@5.3.14:
+    resolution: {integrity: sha512-LxJ4iEFcpqc6METwp9f6BV6VVc43m6MfH0VqFosHvrUgfXiFe6ww7R3itkOQ+TCK6Y+Iv/+RnnvtRZnkc5Kc9g==}
+    dependencies:
+      '@types/node': 20.14.14
     dev: false
 
   /@types/prop-types@15.7.12:
