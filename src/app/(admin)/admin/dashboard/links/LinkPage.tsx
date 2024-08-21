@@ -223,7 +223,12 @@ export default function AdminPage() {
       <div className="items-center justify-between lg:flex">
         <div className="mb-4 lg:mb-0">
           <h3 className="mb-2 text-xl font-bold text-gray-900 dark:text-white">
-            Links
+            Links &nbsp;{' '}
+            <Link href={'/admin/dashboard/links/importer'}>
+              <button className="bg-slate-300 rounded px-2 text-black">
+                Import
+              </button>
+            </Link>
           </h3>
           <span className="text-base font-normal text-gray-500 dark:text-gray-400">
             This is a list of all submitted link

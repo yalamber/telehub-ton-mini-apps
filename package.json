@@ -34,6 +34,7 @@
     "nextjs-toploader": "^1.6.12",
     "node-telegram-bot-api": "^0.66.0",
     "normalize.css": "^8.0.1",
+    "papaparse": "^5.4.1",
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.52.2",

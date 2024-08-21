@@ -1,6 +1,8 @@
 import { NextRequest } from 'next/server';
 import connectMongo from '@/utils/dbConnect';
 import Link from '@/models/Link';
+import authOptions from '@/app/api/auth/[...nextauth]/authOptions';
+import { getServerSession } from 'next-auth';
 
 export async function GET(request: NextRequest) {
   await connectMongo();
@@ -18,6 +20,10 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   await connectMongo();
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return Response.json({ status: 'error' }, { status: 401 });
+  }
   const id = params.id;
   const document = await Link.findById(id);
   if (!document) {
