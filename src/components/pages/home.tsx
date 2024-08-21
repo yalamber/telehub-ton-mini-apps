@@ -166,7 +166,7 @@ export default function Home({
     const wrapperDivWidth =
       fullWidth || links?.length === 1
         ? 'w-full'
-        : `grid grid-rows-2 grid-flow-col auto-cols-max`;
+        : `grid grid-rows-2 grid-flow-col auto-cols-max flex items-center`;
     const innerDivWidth =
       fullWidth || links?.length === 1 ? 'w-full' : 'w-64 pr-5';
     return (
