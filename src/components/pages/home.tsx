@@ -156,7 +156,6 @@ export default function Home({
     activeLanguage,
   ]);
 
-  // Link list display component for featured items
   const LinkListDisplay = ({
     links,
     fullWidth = false,
@@ -167,9 +166,9 @@ export default function Home({
     const wrapperDivWidth =
       fullWidth || links?.length === 1
         ? 'w-full'
-        : 'grid gap-x-6 grid-cols-2 w-[36rem] md:w-[40rem]';
+        : `grid grid-rows-2 grid-flow-col auto-cols-max`;
     const innerDivWidth =
-      fullWidth || links?.length === 1 ? 'w-full' : 'w-[98%]';
+      fullWidth || links?.length === 1 ? 'w-full' : 'w-64 pr-5';
     return (
       <ul className={`${wrapperDivWidth}`}>
         {links.map((item: any) => {
