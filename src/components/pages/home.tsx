@@ -191,7 +191,7 @@ export default function Home({
         vertical="top"
         style={{
           padding: 0,
-          background: themeParams.secondaryBgColor,
+          background: themeParams.bgColor,
         }}
         className={`z-10`}
       >
@@ -312,12 +312,7 @@ export default function Home({
           />
         </div>
       </FixedLayout>
-      <Section
-        style={{
-          background: themeParams.secondaryBgColor,
-        }}
-        className="mt-32"
-      >
+      <Section className="mt-32">
         {contentLoading && (
           <div className="flex justify-center">
             <Spinner size="m" />
