@@ -34,13 +34,17 @@ export const revalidate = 120;
 export default async function Home() {
   const { categories, countries, languages, trendingLinks, newLinks, links } =
     await getData();
-
+  console.log(links);
   return (
     <HomePage
       resTrendingLinks={JSON.parse(JSON.stringify(trendingLinks))}
       resNewLinks={JSON.parse(JSON.stringify(newLinks))}
       resLinks={JSON.parse(JSON.stringify(links))}
-      nextCursor={(links as Array<any>)[links.length - 1]._id.toString()}
+      nextCursor={
+        links.length > 0
+          ? (links as Array<any>)[links.length - 1]._id.toString()
+          : null
+      }
       categories={JSON.parse(JSON.stringify(categories))}
       countries={JSON.parse(JSON.stringify(countries))}
       languages={JSON.parse(JSON.stringify(languages))}
