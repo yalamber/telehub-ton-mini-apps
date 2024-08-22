@@ -28,7 +28,7 @@ function LinkRow({
     });
     const resData = await rawResponse.json();
     if (resData) {
-      fetchLinks(filterStatus, searchTerm);
+      // fetchLinks(filterStatus, searchTerm);
     }
   };
 
@@ -37,7 +37,7 @@ function LinkRow({
     const rawResponse = await fetch(url, { method: 'DELETE' });
     const resData = await rawResponse.json();
     if (resData) {
-      fetchLinks(filterStatus, searchTerm);
+      // fetchLinks(filterStatus, searchTerm);
     }
   };
 
