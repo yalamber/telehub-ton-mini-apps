@@ -312,55 +312,52 @@ export default function Home({
           />
         </div>
       </FixedLayout>
-      <Section className="mt-32">
+      <div className="mt-32 bg-none bg-transparent">
         {contentLoading && (
           <div className="flex justify-center">
             <Spinner size="m" />
           </div>
         )}
         {trendingLinks?.length > 0 && (
-          <Section
-            header={
-              <div className="flex justify-between px-4 py-2">
-                <Link href="/see-all/trending">
-                  <h2 className={`font-bold`}>Trending</h2>
-                </Link>
-                <Link href="/see-all/trending">See all</Link>
-              </div>
-            }
-          >
+          <>
+            <div className="flex justify-between px-4 py-2">
+              <Link href="/see-all/trending">
+                <h2 className="font-bold">Trending</h2>
+              </Link>
+              <Link href="/see-all/trending">See all</Link>
+            </div>
             <div className="px-5 pb-4 overflow-auto hover:overflow-scroll no-scrollbar">
               <LinkListDisplay links={trendingLinks} />
             </div>
-          </Section>
+          </>
         )}
         {newLinks?.length > 0 && (
-          <Section
-            header={
-              <div className="flex justify-between px-4 py-2">
-                <Link href="/see-all/new">
-                  <h2 className={`font-bold`}>New</h2>
-                </Link>
-                <Link href="/see-all/new">See all</Link>
-              </div>
-            }
-          >
+          <>
+            <div className="flex justify-between px-4 py-2">
+              <Link href="/see-all/new">
+                <h2 className="font-bold">New</h2>
+              </Link>
+              <Link href="/see-all/new">See all</Link>
+            </div>
             <div className="px-5 pb-4 overflow-auto hover:overflow-scroll no-scrollbar">
               <LinkListDisplay links={newLinks} />
             </div>
-          </Section>
+          </>
         )}
         {links?.length > 0 && (
-          <Section header="Links">
+          <>
+            <div className="flex justify-between px-4 py-2">
+              <h2 className="font-bold">Links</h2>
+            </div>
             <div className="px-5 py-2">
               <InfiniteLinkList
                 initialLinks={links}
                 initialNextCursor={nextCursor}
               />
             </div>
-          </Section>
+          </>
         )}
-      </Section>
+      </div>
     </>
   );
 }
