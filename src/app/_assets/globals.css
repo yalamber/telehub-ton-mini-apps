@@ -1,5 +1,5 @@
 body {
-  background: var(--tg-theme-bg-color, white);
+  background: var(--tg-theme-secondary-bg-color, white);
 }
 
 /* Chrome, Safari and Opera */
