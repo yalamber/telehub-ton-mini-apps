@@ -312,7 +312,12 @@ export default function Home({
           />
         </div>
       </FixedLayout>
-      <Section className="mt-32">
+      <Section
+        style={{
+          background: themeParams.secondaryBgColor,
+        }}
+        className="mt-32"
+      >
         {contentLoading && (
           <div className="flex justify-center">
             <Spinner size="m" />
