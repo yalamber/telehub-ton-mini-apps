@@ -189,7 +189,7 @@ export default function Home({
         vertical="top"
         style={{
           padding: 0,
-          background: themeParams.secondaryBgColor,
+          // background: themeParams.secondaryBgColor,
         }}
         className={`z-10`}
       >
