@@ -17,12 +17,23 @@ export default function LinkDisplay({ item }: { item: any }) {
     >
       <div className="flex items-center space-x-4 rtl:space-x-reverse">
         <div className="flex-shrink-0">
-          <Image
-            src={item.photo ?? ''}
-            alt={item.title}
-            width={40}
-            height={40}
-          />
+          {item.photo && (
+            <Image
+              className="rounded-full"
+              src={item.photo}
+              alt={item.title}
+              width={40}
+              height={40}
+              priority={true}
+            />
+          )}
+          {!item.photo && (
+            <div className="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
+              <span className="font-medium text-gray-600 dark:text-gray-300">
+                {item.title.slice(0, 2)}
+              </span>
+            </div>
+          )}
         </div>
         <div className="flex-1 min-w-0">
           <p
