@@ -189,7 +189,7 @@ export default function Home({
         vertical="top"
         style={{
           padding: 0,
-          background: themeParams.headerBgColor,
+          background: themeParams.bgColor,
         }}
         className={`z-10`}
       >
@@ -310,7 +310,7 @@ export default function Home({
           />
         </div>
       </FixedLayout>
-      <div className="mt-32 bg-none bg-transparent overflow-y-scroll">
+      <div className="mt-32 bg-none bg-transparent">
         {contentLoading && (
           <div className="flex justify-center">
             <Spinner size="m" />

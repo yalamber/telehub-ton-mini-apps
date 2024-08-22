@@ -28,6 +28,10 @@ function App(props: PropsWithChildren) {
   const viewport = useViewport();
 
   useEffect(() => {
+    if (themeParams.bgColor) {
+      miniApp.setHeaderColor(themeParams.bgColor);
+      miniApp.setBgColor(themeParams.bgColor);
+    }
     return bindMiniAppCSSVars(miniApp, themeParams);
   }, [miniApp, themeParams]);
 
