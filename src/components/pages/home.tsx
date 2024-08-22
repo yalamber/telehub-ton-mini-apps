@@ -9,8 +9,6 @@ import {
 } from '@telegram-apps/sdk-react';
 import {
   FixedLayout,
-  Section,
-  Skeleton,
   Spinner,
 } from '@telegram-apps/telegram-ui';
 import { Icon28AddCircle } from '@telegram-apps/telegram-ui/dist/icons/28/add_circle';
