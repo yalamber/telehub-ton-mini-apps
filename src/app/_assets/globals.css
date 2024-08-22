@@ -1,10 +1,6 @@
-/* :root {
-  --tg-theme-bg-color: var(--tg-theme-background-color);
-}
-
 body {
-  background: var(--tg-theme-bg-color, white);
-} */
+  background: transparent;
+}
 
 /* Chrome, Safari and Opera */
 .no-scrollbar::-webkit-scrollbar {

@@ -41,8 +41,7 @@ function App(props: PropsWithChildren) {
 
   return (
     <AppRoot
-      // appearance={miniApp.isDark ? 'dark' : 'light'}
-      style={{ background: themeParams.headerBgColor }}
+      appearance={miniApp.isDark ? 'dark' : 'light'}
       platform={['macos', 'ios'].includes(lp.platform) ? 'ios' : 'base'}
     >
       {props.children}
