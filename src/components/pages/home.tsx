@@ -310,7 +310,7 @@ export default function Home({
           />
         </div>
       </FixedLayout>
-      <div className="mt-32 bg-none bg-transparent">
+      <div className="mt-32 bg-none bg-transparent overflow-y-scroll">
         {contentLoading && (
           <div className="flex justify-center">
             <Spinner size="m" />
