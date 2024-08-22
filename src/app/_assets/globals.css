@@ -1,7 +1,3 @@
-body {
-  background: var(--tg-theme-bg-color, white);
-}
-
 /* Chrome, Safari and Opera */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
