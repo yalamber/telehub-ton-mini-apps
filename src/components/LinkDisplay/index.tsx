@@ -1,5 +1,6 @@
 import { useUtils, useThemeParams } from '@telegram-apps/sdk-react';
-import { Avatar } from '@telegram-apps/telegram-ui';
+// import { Avatar } from '@telegram-apps/telegram-ui';
+import Image from 'next/image';
 
 // Link list display component for featured items
 export default function LinkDisplay({ item }: { item: any }) {
@@ -16,10 +17,11 @@ export default function LinkDisplay({ item }: { item: any }) {
     >
       <div className="flex items-center space-x-4 rtl:space-x-reverse">
         <div className="flex-shrink-0">
-          <Avatar
-            size={40}
+          <Image
             src={item.photo ?? ''}
-            acronym={item.title.slice(0, 1)}
+            alt={item.title}
+            width={40}
+            height={40}
           />
         </div>
         <div className="flex-1 min-w-0">

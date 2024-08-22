@@ -34,7 +34,6 @@ export const revalidate = 120;
 export default async function Home() {
   const { categories, countries, languages, trendingLinks, newLinks, links } =
     await getData();
-  console.log(links);
   return (
     <HomePage
       resTrendingLinks={JSON.parse(JSON.stringify(trendingLinks))}
