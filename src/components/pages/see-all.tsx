@@ -81,8 +81,8 @@ export default function SeeAll({ resLinks, type }: HomeProps) {
   }, []);
 
   return (
-    <Section>
-      <h1 className="font-bold p-5">
+    <div>
+      <h1 className="font-bold px-5 pt-2">
         {type === 'TRENDING' ? 'Trending' : 'New'} Links
       </h1>
       {contentLoading && (
@@ -91,12 +91,10 @@ export default function SeeAll({ resLinks, type }: HomeProps) {
         </div>
       )}
       {links?.length > 0 && (
-        <Section>
-          <div className="px-5 py-5">
-            <InfiniteLinkList initialLinks={links} />
-          </div>
-        </Section>
+        <div className="px-5 py-5">
+          <InfiniteLinkList initialLinks={links} />
+        </div>
       )}
-    </Section>
+    </div>
   );
 }
