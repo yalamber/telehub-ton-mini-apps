@@ -41,7 +41,7 @@ function App(props: PropsWithChildren) {
 
   return (
     <AppRoot
-      appearance={miniApp.isDark ? 'dark' : 'light'}
+      style={{ background: '#ff0000' }}
       platform={['macos', 'ios'].includes(lp.platform) ? 'ios' : 'base'}
     >
       {props.children}
@@ -71,9 +71,7 @@ function RootInner({ children }: PropsWithChildren) {
   return (
     <TonConnectUIProvider manifestUrl={manifestUrl}>
       <SDKProvider acceptCustomStyles debug={debug}>
-        <App>
-          {children}
-        </App>
+        <App>{children}</App>
       </SDKProvider>
     </TonConnectUIProvider>
   );
@@ -86,7 +84,9 @@ export function Root(props: PropsWithChildren) {
 
   return didMount ? (
     <ErrorBoundary fallback={ErrorPage}>
-      <RootInner {...props}/>
+      <RootInner {...props} />
     </ErrorBoundary>
-  ) : <div className="root__loading">Loading</div>;
+  ) : (
+    <div className="root__loading">Loading</div>
+  );
 }
