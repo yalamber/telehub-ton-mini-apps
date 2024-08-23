@@ -139,7 +139,6 @@ export async function GET(request: NextRequest) {
   const language = searchParams.get('language');
   const status = searchParams.get('status');
   const featuredType = searchParams.get('featuredType');
-
   // Pagination parameters
   const limit = parseInt(searchParams.get('limit') || '10', 10);
   const cursor = searchParams.get('cursor');
