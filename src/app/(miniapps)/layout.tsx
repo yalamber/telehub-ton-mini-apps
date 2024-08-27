@@ -10,7 +10,7 @@ import 'normalize.css/normalize.css';
 import '../_assets/globals.css';
 
 export const metadata: Metadata = {
-  title: 'Bazaar On TON',
+  title: 'TeleHubbleOGBot',
   description: 'Channels directory',
 };
 

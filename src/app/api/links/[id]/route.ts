@@ -28,6 +28,7 @@ export async function PUT(
   await link.save();
   return Response.json({ status: "success" }, { status: 200 });
 }
+
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
