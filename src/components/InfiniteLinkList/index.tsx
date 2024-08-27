@@ -3,23 +3,28 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import { Spinner } from '@telegram-apps/telegram-ui';
 import LinkDisplay from '../LinkDisplay';
 
+interface Link {
+  _id: string;
+  // Add other link properties here
+}
+
 export default function InfiniteLinkList({
   initialLinks,
   initialNextCursor,
 }: {
-  initialLinks: Array<any>;
+  initialLinks: Link[];
   initialNextCursor?: string | null;
 }) {
-  const [links, setLinks] = useState(initialLinks);
-  const [nextCursor, setNextCursor] = useState(initialNextCursor);
+  const [links, setLinks] = useState<Link[]>(initialLinks);
+  const [nextCursor, setNextCursor] = useState<string | null>(initialNextCursor ?? null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const loadMore = useCallback(() => {
+  const loadMore = useCallback(async () => {
     if (!nextCursor || isLoading) return;
 
     setIsLoading(true);
 
-    (async () => {
+    try {
       const response = await fetch(`/api/links?cursor=${nextCursor}&limit=10`);
       const data = await response.json();
       if (data.status === 'success') {
@@ -28,36 +33,35 @@ export default function InfiniteLinkList({
       } else {
         console.error('Failed to fetch more links:', data);
       }
-    })();
+    } catch (error) {
+      console.error('Error fetching links:', error);
+    } finally {
+      setIsLoading(false);
+    }
   }, [nextCursor, isLoading]);
   const scrollTrigger = useRef(null);
 
   useEffect(() => {
-    if (typeof window === 'undefined' || !window.IntersectionObserver) {
-      return;
-    }
+    if (typeof window === 'undefined' || !window.IntersectionObserver) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) {
-          loadMore();
-        }
+        if (entries[0].isIntersecting) loadMore();
       },
       { threshold: 0.5 }
     );
-    if (scrollTrigger.current) {
-      observer.observe(scrollTrigger.current);
-    }
-    // Cleanup
+
+    const currentTrigger = scrollTrigger.current;
+    if (currentTrigger) observer.observe(currentTrigger);
+
     return () => {
-      if (scrollTrigger.current) {
-        observer.unobserve(scrollTrigger.current);
-      }
+      if (currentTrigger) observer.unobserve(currentTrigger);
     };
   }, [loadMore]);
 
   return (
     <div>
-      {links.map((item: any) => (
+      {links.map((item: Link) => (
         <div className="pb-4" key={item._id}>
           <LinkDisplay item={item} />
         </div>

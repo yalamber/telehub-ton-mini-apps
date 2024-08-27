@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 import { headers } from 'next/headers';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import {
   validate,
@@ -128,69 +128,56 @@ export async function POST(request: Request) {
 
 export async function GET(request: NextRequest) {
   await connectMongo();
-  const session = await getServerSession(authOptions);
-  const { searchParams } = request.nextUrl;
-  const query: Record<string, any> = {};
-  // Extract search parameters
-  const search = searchParams.get('search');
+
+  const searchParams = request.nextUrl.searchParams;
+  const cursor = searchParams.get('cursor');
+  const limit = parseInt(searchParams.get('limit') || '10', 10);
+  const title = searchParams.get('title');
   const category = searchParams.get('category');
   const country = searchParams.get('country');
   const city = searchParams.get('city');
   const language = searchParams.get('language');
-  const status = searchParams.get('status');
   const featuredType = searchParams.get('featuredType');
-  // Pagination parameters
-  const limit = parseInt(searchParams.get('limit') || '10', 10);
-  const cursor = searchParams.get('cursor');
 
-  // Build query
-  if (search) {
-    query.$or = [
-      { title: { $regex: search, $options: 'i' } },
-      { link: { $regex: search, $options: 'i' } },
-    ];
-  }
+  const query: any = { status: 'APPROVED' };
+
+  if (title) query.title = { $regex: title, $options: 'i' };
   if (category) query.category = category;
   if (country) query.country = country;
   if (city) query.city = city;
   if (language) query.language = language;
   if (featuredType) query.featuredType = featuredType;
-  // Allow filter by status to only logged in users
-  if (session) {
-    if (status) {
-      query.status = status;
-    }
-  } else {
-    query.status = 'APPROVED';
-  }
 
-  // Add cursor to query
   if (cursor) {
-    query._id = { $gt: new Types.ObjectId(cursor) };
+    query._id = { $lt: cursor };
   }
 
-  const data: Array<any> = await Link.find(query)
-    .sort({ _id: 1 })
-    .limit(limit + 1)
-    .lean();
+  try {
+    const links = await Link.find(query)
+      .sort({ _id: -1 })
+      .limit(limit + 1)
+      .lean() as LinkDocument[];
 
-  // Determine if there's a next/previous page
-  const hasMore = data.length > limit;
+    const hasNextPage = links.length > limit;
+    const data = links.slice(0, limit);
 
-  if (hasMore) {
-    data.pop(); // Remove the extra item
-  }
-  const nextCursor = hasMore ? data[data.length - 1]._id.toString() : null;
-
-  return Response.json(
-    {
+    return NextResponse.json({
       status: 'success',
       data,
       pagination: {
-        nextCursor,
-        hasMore,
+        nextCursor: hasNextPage ? data[data.length - 1]._id.toString() : null,
       },
-    },
-    { status: 200 }
-  );
+    });
+  } catch (error) {
+    console.error('Error fetching links:', error);
+    return NextResponse.json(
+      { status: 'error', message: 'Failed to fetch links' },
+      { status: 500 }
+    );
+  }
+}
+
+interface LinkDocument {
+  _id: Types.ObjectId;
+  // Add other fields as needed
 }
