@@ -7,7 +7,12 @@ import {
   useViewport,
   useThemeParams,
 } from '@telegram-apps/sdk-react';
-import { FixedLayout, Spinner } from '@telegram-apps/telegram-ui';
+import {
+  FixedLayout,
+  Spinner,
+  Banner,
+  Button,
+} from '@telegram-apps/telegram-ui';
 import { Icon28AddCircle } from '@telegram-apps/telegram-ui/dist/icons/28/add_circle';
 import LinkDisplay from '@/components/LinkDisplay';
 import FilterSelector from '@/components/FilterSelector';
@@ -41,6 +46,7 @@ export default function Home({
   const themeParams = useThemeParams();
   const firstRender = useFirstRender();
   const [searchTerm, setSearchTerm] = useState('');
+  const [bannerOpen, setBannerOpen] = useState(true);
   const [contentLoading, setContentLoading] = useState(false);
   const [trendingLinks, setTrendingLinks] = useState(resTrendingLinks ?? []);
   const [newLinks, setNewLinks] = useState(resNewLinks ?? []);
@@ -308,6 +314,24 @@ export default function Home({
         </div>
       </FixedLayout>
       <div className="mt-32 bg-none bg-transparent">
+        {bannerOpen && (
+          <Banner
+            before={<></>}
+            header="Want to promote your Channel/Group?"
+            onCloseIcon={() => {
+              setBannerOpen(false);
+            }}
+            subheader="Submit your telegram link and we will promote it for you."
+            type="section"
+            className="px-6"
+          >
+            <>
+              <Link href="/mapp/add-link">
+                <Button size="s">Submit now</Button>
+              </Link>
+            </>
+          </Banner>
+        )}
         {contentLoading && (
           <div className="flex justify-center">
             <Spinner size="m" />
