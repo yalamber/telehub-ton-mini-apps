@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import NextTopLoader from 'nextjs-toploader';
 
-import { Root } from '@/components/Root/Root';
+import { Root } from '@/components/Root/NonMiniAppRoot';
 import '@telegram-apps/telegram-ui/dist/styles.css';
 
 import 'normalize.css/normalize.css';
