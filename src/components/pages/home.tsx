@@ -340,10 +340,10 @@ export default function Home({
         {trendingLinks?.length > 0 && (
           <>
             <div className="flex justify-between px-4 py-2">
-              <Link href="/see-all/trending">
+              <Link href="/mapp/see-all/trending">
                 <h2 className="font-bold">Trending</h2>
               </Link>
-              <Link href="/see-all/trending">See all</Link>
+              <Link href="/map/see-all/trending">See all</Link>
             </div>
             <div className="px-5 pb-4 overflow-auto hover:overflow-scroll no-scrollbar">
               <LinkListDisplay links={trendingLinks} />
