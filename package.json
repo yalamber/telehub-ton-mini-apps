@@ -10,7 +10,8 @@
     "lint": "next lint",
     "tg:login": "node --experimental-strip-types --env-file=.env.local ./src/scripts/telegram_login.ts",
     "import:cats": "node --experimental-strip-types --env-file=.env.local ./src/scripts/import-categories.ts",
-    "import:links": "node --experimental-strip-types --env-file=.env.local ./src/scripts/import-csv-links.ts"
+    "import:links": "node --experimental-strip-types --env-file=.env.local ./src/scripts/import-csv-links.ts",
+    "bot:message-channel": "node --experimental-strip-types --env-file=.env.local ./src/scripts/bot-message-channel.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

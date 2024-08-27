@@ -13,7 +13,7 @@ declare module 'next-auth' {
   }
 }
 
-const ADMIN_USERS = ['1279815786'];
+const ADMIN_USERS = ['1279815786', '7385209685'];
 
 const authOptions: NextAuthOptions = {
   providers: [
