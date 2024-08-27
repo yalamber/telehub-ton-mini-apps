@@ -29,6 +29,8 @@ function App(props: PropsWithChildren) {
 
   useEffect(() => {
     if (themeParams.bgColor) {
+      // TODO: set body bg color to themeParams.bgColor 
+      document.body.style.backgroundColor = themeParams.bgColor;
       miniApp.setHeaderColor(themeParams.bgColor);
       miniApp.setBgColor(themeParams.bgColor);
     }
