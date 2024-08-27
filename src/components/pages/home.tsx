@@ -7,10 +7,7 @@ import {
   useViewport,
   useThemeParams,
 } from '@telegram-apps/sdk-react';
-import {
-  FixedLayout,
-  Spinner,
-} from '@telegram-apps/telegram-ui';
+import { FixedLayout, Spinner } from '@telegram-apps/telegram-ui';
 import { Icon28AddCircle } from '@telegram-apps/telegram-ui/dist/icons/28/add_circle';
 import LinkDisplay from '@/components/LinkDisplay';
 import FilterSelector from '@/components/FilterSelector';
@@ -196,7 +193,7 @@ export default function Home({
         <div className="flex m-4">
           <input
             type="text"
-            className={`p-2 mr-4 flex-grow rounded-xl bg-transparent border border-[${themeParams.accentTextColor}]`}
+            className={`p-2 px-3 mr-4 flex-grow rounded-xl bg-slate-400 dark:bg-black`}
             placeholder="Search"
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -204,9 +201,39 @@ export default function Home({
             <Icon28AddCircle />
           </Link>
         </div>
-        <div className="grid grid-flow-col space-x-2 m-4 justify-stretch overflow-x-auto no-scrollbar">
+        <div className="grid grid-flow-col overflow-x-auto no-scrollbar">
           <FilterSelector
-            triggerClass="min-w-[125px]"
+            triggerClass="min-w-[124px]"
+            modalContainerStyle={{
+              background: themeParams.bgColor,
+            }}
+            icon={
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="size-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 6h.008v.008H6V6Z"
+                />
+              </svg>
+            }
+            items={categories}
+            label={activeCategory ?? 'Categories'}
+            onChange={setActiveCategory}
+          />
+          <FilterSelector
+            triggerClass="min-w-[110px]"
             modalContainerStyle={{
               background: themeParams.bgColor,
             }}
@@ -234,7 +261,7 @@ export default function Home({
             modalContainerStyle={{
               background: themeParams.bgColor,
             }}
-            triggerClass="min-w-[90px]"
+            triggerClass="min-w-[85px]"
             icon={
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -277,36 +304,6 @@ export default function Home({
             items={languages}
             label={activeLanguage ?? 'Language'}
             onChange={setActiveLanguage}
-          />
-          <FilterSelector
-            triggerClass="min-w-[140px]"
-            modalContainerStyle={{
-              background: themeParams.bgColor,
-            }}
-            icon={
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 6h.008v.008H6V6Z"
-                />
-              </svg>
-            }
-            items={categories}
-            label={activeCategory ?? 'Categories'}
-            onChange={setActiveCategory}
           />
         </div>
       </FixedLayout>

@@ -59,7 +59,7 @@ const FilterSelector = ({
           size="s"
           mode="plain"
           onClick={() => setIsOpen(items?.length > 0 ? true : false)}
-          className={`${triggerClass ?? ''} outline-none`}
+          className={`${triggerClass ?? ''} pr-0 gap-1 outline-none`}
         >
           {label}
         </Button>
