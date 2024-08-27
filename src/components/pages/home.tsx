@@ -197,7 +197,7 @@ export default function Home({
             placeholder="Search"
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <Link href="/add-link" className="self-center">
+          <Link href="/mapp/add-link" className="self-center">
             <Icon28AddCircle />
           </Link>
         </div>
@@ -261,7 +261,7 @@ export default function Home({
             modalContainerStyle={{
               background: themeParams.bgColor,
             }}
-            triggerClass="min-w-[85px]"
+            triggerClass="min-w-[80px]"
             icon={
               <svg
                 xmlns="http://www.w3.org/2000/svg"

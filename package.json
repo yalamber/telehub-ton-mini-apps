@@ -13,6 +13,7 @@
     "import:links": "node --experimental-strip-types --env-file=.env.local ./src/scripts/import-csv-links.ts"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.9.0",
     "@inquirer/prompts": "^5.3.8",
     "@mtproto/core": "^6.3.0",
     "@telegram-apps/init-data-node": "^1.0.4",
@@ -45,9 +46,9 @@
   "devDependencies": {
     "@types/node": "^20",
     "@types/node-telegram-bot-api": "^0.64.7",
+    "@types/papaparse": "^5.3.14",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "@types/papaparse": "^5.3.14",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
     "postcss": "^8",
