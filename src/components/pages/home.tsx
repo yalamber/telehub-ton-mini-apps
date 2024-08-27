@@ -169,7 +169,7 @@ export default function Home({
         ? 'w-full'
         : `grid grid-rows-2 grid-flow-col auto-cols-max flex items-center`;
     const innerDivWidth =
-      fullWidth || links?.length === 1 ? 'w-full' : 'w-64 pr-5';
+      fullWidth || links?.length === 1 ? 'w-full' : 'w-72 pr-5';
     return (
       <ul className={`${wrapperDivWidth}`}>
         {links.map((item: any) => {
