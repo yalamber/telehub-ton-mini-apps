@@ -102,7 +102,7 @@ export async function POST(request: Request) {
             `\ncategory:${reqBody.category}` +
             `\nstatus: pending`
         );
-        return Response.json({ status: 'ok', channelData: tgLinkData });
+        return Response.json({ status: 'ok', data: linkData });
       } catch (err: any) {
         console.log('ERR', err);
         if (err instanceof z.ZodError) {
@@ -135,7 +135,7 @@ export async function GET(request: NextRequest) {
   const city = searchParams.get('city');
   const language = searchParams.get('language');
   const featuredType = searchParams.get('featuredType');
-  
+
   const cacheKey = `links:${cursor}:${limit}:${title}:${category}:${country}:${city}:${language}:${featuredType}`;
   try {
     // Try to get results from cache

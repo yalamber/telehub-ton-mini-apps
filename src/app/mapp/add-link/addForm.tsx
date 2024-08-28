@@ -7,6 +7,7 @@ import {
   useBackButton,
   useMainButton,
   usePopup,
+  useInvoice,
 } from '@telegram-apps/sdk-react';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -16,6 +17,7 @@ import {
   Spinner,
   Select,
   Placeholder,
+  Button,
 } from '@telegram-apps/telegram-ui';
 import { fetchCities } from '@/utils/helpers';
 import TelegramImg from '@/app/_assets/telegram.gif';
@@ -74,9 +76,16 @@ export default function AddForm({
   const [cities, setCities] = useState<Array<any>>([]);
   const [citiesLoading, setCitiesLoading] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [addedLink, setAddedLink] = useState<string | null>(null);
+  const [featurePaymentStatus, setFeaturePaymentStatus] = useState<
+    string | null
+  >(null);
+  const [paymentLoading, setPaymentLoading] = useState(false);
+  const [paymentErrorMsg, setPaymentErrorMsg] = useState<string | null>(null);
   const initDataRaw = useLaunchParams().initDataRaw;
   const bb = useBackButton(true);
   const mb = useMainButton(true);
+  const invoice = useInvoice();
   const router = useRouter();
   const popup = usePopup();
 
@@ -118,7 +127,6 @@ export default function AddForm({
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
       if (!isValid) {
-        // todo show popup and return
         popup.open({
           title: 'Form Validation Error',
           message: 'Please fill out all required fields correctly.',
@@ -136,6 +144,7 @@ export default function AddForm({
       });
       const resData = await res.json();
       if (resData.status === 'ok') {
+        setAddedLink(resData?.data?.link);
         setFormSubmitted(true);
         mb?.hide();
       } else {
@@ -149,6 +158,36 @@ export default function AddForm({
       });
     } finally {
       mb?.setParams({ isLoaderVisible: false });
+    }
+  };
+
+  const handleFeatureLink = async (link: string) => {
+    try {
+      setPaymentLoading(true);
+      const res = await fetch('/api/tg-invoice', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `tma ${initDataRaw}`,
+        },
+        body: JSON.stringify({ link }),
+      });
+      const data = await res.json();
+      if (data.status === 'ok') {
+        const status = await invoice.open(data.invoiceLink, 'url');
+        if (status === 'success') {
+          setFeaturePaymentStatus('paid');
+        } else {
+          throw new Error('not paid');
+        }
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (e: any) {
+      console.log(e);
+      setPaymentErrorMsg(e?.message);
+    } finally {
+      setPaymentLoading(true);
     }
   };
 
@@ -172,13 +211,32 @@ export default function AddForm({
       <div className="space-y-1 pb-10">
         <Placeholder
           header="Submitted"
-          description="Link submitted for review by the administrators"
+          description="Link submitted for review by the administrator"
         >
           <Image
             alt="Telegram sticker"
             src={TelegramImg}
             style={{ display: 'block', width: '144px', height: '144px' }}
           />
+          {featurePaymentStatus === 'paid' && (
+            <div className="text-green-500 text-sm -mt-1 px-8 pb-3">
+              Payment successful!
+            </div>
+          )}
+          {paymentErrorMsg && (
+            <div className="text-red-500 text-sm -mt-1 px-8 pb-3">
+              {paymentErrorMsg}
+            </div>
+          )}
+          {addedLink} {featurePaymentStatus}
+          {!featurePaymentStatus && addedLink && (
+            <Button
+              onClick={() => handleFeatureLink(addedLink)}
+              loading={paymentLoading}
+            >
+              Pay only 100 Stars to Get Featured{' '}
+            </Button>
+          )}
         </Placeholder>
       </div>
     );

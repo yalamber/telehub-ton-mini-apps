@@ -329,6 +329,11 @@ export default function Home({
               <Link href="/mapp/add-link">
                 <Button size="s">Submit now</Button>
               </Link>
+              {/* <Link href="/mapp/add-link/feature">
+                <Button mode="plain" size="s">
+                  Feature your link
+                </Button>
+              </Link> */}
             </>
           </Banner>
         )}
