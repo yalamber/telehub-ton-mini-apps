@@ -1,11 +1,11 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Papa from 'papaparse';
 
 export default function AdminPage() {
   const [csvData, setCsvData] = useState<any[]>([]);
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       Papa.parse(file, {
@@ -22,51 +22,40 @@ export default function AdminPage() {
         },
       });
     }
-  };
+  }, []);
+
+  const processRow = useCallback(async (row: any, index: number) => {
+    try {
+      const response = await fetch('/api/links/import', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(row),
+      });
+      return response.ok ? 'success' : 'error';
+    } catch (error) {
+      console.error('Error processing row:', error);
+      return 'error';
+    }
+  }, []);
 
   useEffect(() => {
     const processRowsSequentially = async () => {
       for (let i = 0; i < csvData.length; i++) {
         if (csvData[i]._status === 'pending') {
-          await processRow(csvData[i], i);
+          const status = await processRow(csvData[i], i);
+          setCsvData(prevData => 
+            prevData.map((row, index) => 
+              index === i ? { ...row, _status: status } : row
+            )
+          );
         }
       }
-    };
-
-    const processRow = async (row: any, index: number) => {
-      try {
-        // Replace with your API endpoint
-        const response = await fetch('/api/links/import', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(row),
-        });
-        console.log(response);
-        if (response.ok) {
-          updateRowStatus(index, 'success');
-        } else {
-          updateRowStatus(index, 'error');
-        }
-      } catch (error) {
-        console.error('Error processing row:', error);
-        updateRowStatus(index, 'error');
-      }
-    };
-
-    const updateRowStatus = (index: number, status: string) => {
-      setCsvData((prevData) =>
-        prevData.map((row, i) =>
-          i === index ? { ...row, _status: status } : row
-        )
-      );
     };
 
     if (csvData.length > 0) {
       processRowsSequentially();
     }
-  }, [csvData]);
+  }, [csvData, processRow]);
 
   return (
     <div className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 sm:p-6 dark:bg-gray-800">
