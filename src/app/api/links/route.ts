@@ -12,6 +12,8 @@ import connectMongo from '@/utils/dbConnect';
 import Link from '@/models/Link';
 import { TelegramService } from '@/utils/telegram';
 import { kv } from '@vercel/kv';
+import authOptions from '@/app/api/auth/[...nextauth]/authOptions';
+import { getServerSession } from 'next-auth';
 
 const LinkZod = z.object({
   link: z
@@ -126,6 +128,7 @@ export async function POST(request: Request) {
 }
 
 export async function GET(request: NextRequest) {
+  const session = await getServerSession(authOptions);
   const searchParams = request.nextUrl.searchParams;
   const cursor = searchParams.get('cursor');
   const limit = parseInt(searchParams.get('limit') || '10', 10);
@@ -135,19 +138,25 @@ export async function GET(request: NextRequest) {
   const city = searchParams.get('city');
   const language = searchParams.get('language');
   const featuredType = searchParams.get('featuredType');
+  const status = searchParams.get('status');
 
   const cacheKey = `links:${cursor}:${limit}:${title}:${category}:${country}:${city}:${language}:${featuredType}`;
   try {
     // Try to get results from cache
     const cachedResults = await kv.get(cacheKey);
-    if (cachedResults && typeof cachedResults === 'string') {
+    if (cachedResults && typeof cachedResults === 'string' && !session) {
       return NextResponse.json(JSON.parse(cachedResults));
     }
 
     // If not in cache, connect to MongoDB and query the database
     await connectMongo();
 
-    const query: any = { status: 'APPROVED' };
+    const query: any = {};
+    if (!session) {
+      query.status = 'APPROVED';
+    } else if (status) {
+      query.status = status;
+    }
 
     if (title) query.title = { $regex: title, $options: 'i' };
     if (category) query.category = category;
@@ -155,7 +164,6 @@ export async function GET(request: NextRequest) {
     if (city) query.city = city;
     if (language) query.language = language;
     if (featuredType) query.featuredType = featuredType;
-
     if (cursor) {
       query._id = { $lt: new Types.ObjectId(cursor) };
     }
@@ -175,8 +183,11 @@ export async function GET(request: NextRequest) {
         nextCursor: hasNextPage ? data[data.length - 1]._id.toString() : null,
       },
     };
+
     // Cache the results
-    await kv.set(cacheKey, JSON.stringify(result), { ex: 1800, nx: true });
+    if (!session) {
+      await kv.set(cacheKey, JSON.stringify(result), { ex: 1800, nx: true });
+    }
     return NextResponse.json(result);
   } catch (error) {
     console.error('Error fetching links:', error);

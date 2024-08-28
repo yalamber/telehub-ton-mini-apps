@@ -14,11 +14,11 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  await connectMongo();
   const session = await getServerSession(authOptions);
   if (!session) {
     return Response.json({ status: "error" }, { status: 401 });
   }
+  await connectMongo();
   const body = await request.json();
   const id = params.id;
   const link = await Link.findById(id);
@@ -33,11 +33,11 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  await connectMongo();
   const session = await getServerSession(authOptions);
   if (!session) {
     return Response.json({ status: 'error' }, { status: 401 });
   }
+  await connectMongo();
   const id = params.id;
   const document = await Link.findById(id);
   if (!document) {
