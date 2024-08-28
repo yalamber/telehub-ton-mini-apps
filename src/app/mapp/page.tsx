@@ -1,9 +1,16 @@
+import { kv } from '@vercel/kv';
 import HomePage from '@/components/pages/home';
 import connectMongo from '@/utils/dbConnect';
 import FilterOption from '@/models/FilterOption';
 import Link from '@/models/Link';
 
 async function getData() {
+  const cacheKey = 'homePageData';
+  const cachedData = await kv.get(cacheKey);
+  if (cachedData && typeof cachedData === 'string') {
+    return JSON.parse(cachedData);
+  }
+
   await connectMongo();
 
   const filterTypes = ['CATEGORY', 'COUNTRY', 'LANGUAGE'];
@@ -26,7 +33,16 @@ async function getData() {
         .lean(),
     ]);
 
-  return { categories, countries, languages, trendingLinks, newLinks, links };
+  const result = {
+    categories,
+    countries,
+    languages,
+    trendingLinks,
+    newLinks,
+    links,
+  };
+  await kv.set(cacheKey, JSON.stringify(result), { ex: 1800 });
+  return result;
 }
 
 export const revalidate = 120;

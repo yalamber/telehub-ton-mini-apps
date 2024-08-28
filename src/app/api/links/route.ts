@@ -1,7 +1,6 @@
 import { Types } from 'mongoose';
 import { headers } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 import {
   validate,
   parse,
@@ -10,9 +9,9 @@ import {
 import { z } from 'zod';
 import TelegramBot from 'node-telegram-bot-api';
 import connectMongo from '@/utils/dbConnect';
-import authOptions from '@/app/api/auth/[...nextauth]/authOptions';
 import Link from '@/models/Link';
 import { TelegramService } from '@/utils/telegram';
+import { kv } from '@vercel/kv';
 
 const LinkZod = z.object({
   link: z
@@ -127,8 +126,6 @@ export async function POST(request: Request) {
 }
 
 export async function GET(request: NextRequest) {
-  await connectMongo();
-
   const searchParams = request.nextUrl.searchParams;
   const cursor = searchParams.get('cursor');
   const limit = parseInt(searchParams.get('limit') || '10', 10);
@@ -138,36 +135,49 @@ export async function GET(request: NextRequest) {
   const city = searchParams.get('city');
   const language = searchParams.get('language');
   const featuredType = searchParams.get('featuredType');
-
-  const query: any = { status: 'APPROVED' };
-
-  if (title) query.title = { $regex: title, $options: 'i' };
-  if (category) query.category = category;
-  if (country) query.country = country;
-  if (city) query.city = city;
-  if (language) query.language = language;
-  if (featuredType) query.featuredType = featuredType;
-
-  if (cursor) {
-    query._id = { $lt: cursor };
-  }
-
+  
+  const cacheKey = `links:${cursor}:${limit}:${title}:${category}:${country}:${city}:${language}:${featuredType}`;
   try {
-    const links = await Link.find(query)
+    // Try to get results from cache
+    const cachedResults = await kv.get(cacheKey);
+    if (cachedResults && typeof cachedResults === 'string') {
+      return NextResponse.json(JSON.parse(cachedResults));
+    }
+
+    // If not in cache, connect to MongoDB and query the database
+    await connectMongo();
+
+    const query: any = { status: 'APPROVED' };
+
+    if (title) query.title = { $regex: title, $options: 'i' };
+    if (category) query.category = category;
+    if (country) query.country = country;
+    if (city) query.city = city;
+    if (language) query.language = language;
+    if (featuredType) query.featuredType = featuredType;
+
+    if (cursor) {
+      query._id = { $lt: new Types.ObjectId(cursor) };
+    }
+
+    const links = (await Link.find(query)
       .sort({ _id: -1 })
       .limit(limit + 1)
-      .lean() as LinkDocument[];
+      .lean()) as LinkDocument[];
 
     const hasNextPage = links.length > limit;
     const data = links.slice(0, limit);
 
-    return NextResponse.json({
+    const result = {
       status: 'success',
       data,
       pagination: {
         nextCursor: hasNextPage ? data[data.length - 1]._id.toString() : null,
       },
-    });
+    };
+    // Cache the results
+    await kv.set(cacheKey, JSON.stringify(result), { ex: 1800, nx: true });
+    return NextResponse.json(result);
   } catch (error) {
     console.error('Error fetching links:', error);
     return NextResponse.json(
