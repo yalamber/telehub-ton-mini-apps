@@ -6,7 +6,7 @@ import TelegramBot from 'node-telegram-bot-api';
   });
 
   const message = 'List your telegram channels on our mini app!';
-  const websiteUrl = 'https://t.me/TeleHubListBot?startapp=TeleHubList';
+  const websiteUrl = 'https://t.me/TeleHubListBot/start?startapp=channel';
 
   await bot.sendMessage('@TeleHubList', message, {
     parse_mode: 'Markdown',
