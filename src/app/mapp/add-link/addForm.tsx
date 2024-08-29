@@ -254,7 +254,7 @@ export default function AddForm({
                 header="Link"
                 defaultValue={value ?? ''}
                 onChange={onChange}
-                placeholder="t.me/username"
+                placeholder="1. t.me/link or @username"
                 status={errors.link ? 'error' : 'default'}
               />
               {errors.link && (
@@ -278,7 +278,7 @@ export default function AddForm({
                 onChange={onChange}
                 status={errors.category ? 'error' : 'default'}
               >
-                <option value="">Select Category</option>
+                <option value="">2. Select Category</option>
                 {categories?.map((item: any, index: number) => (
                   <option key={`category-${index}`} value={item?.value}>
                     {item?.label}
@@ -314,7 +314,7 @@ export default function AddForm({
                 }}
                 status={errors.country ? 'error' : 'default'}
               >
-                <option value="">Select Country</option>
+                <option value="">3. Select Country</option>
                 <option value="other">Global</option>
                 {countries?.map((item: any, index: number) => (
                   <option key={`country-${index}`} value={item?.value}>
@@ -345,7 +345,7 @@ export default function AddForm({
               onChange={onChange}
               disabled={!cities?.length}
             >
-              <option value="">Select City</option>
+              <option value="">4. Select City (optional)</option>
               {cities.map((item: any, index: number) => (
                 <option key={`city-${index}`} value={item?.value}>
                   {item?.label}
@@ -367,7 +367,7 @@ export default function AddForm({
                 onChange={onChange}
                 status={errors.language ? 'error' : 'default'}
               >
-                <option value="">Select Language</option>
+                <option value="">5. Select Language</option>
                 {languages?.map((item: any, index: number) => (
                   <option key={`language-${index}`} value={item?.value}>
                     {item?.label}
