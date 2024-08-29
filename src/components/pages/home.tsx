@@ -348,7 +348,7 @@ export default function Home({
               <Link href="/mapp/see-all/trending">
                 <h2 className="font-bold">Trending</h2>
               </Link>
-              <Link href="/map/see-all/trending">See all</Link>
+              <Link href="/mapp/see-all/trending">See all</Link>
             </div>
             <div className="px-5 pb-4 overflow-auto hover:overflow-scroll no-scrollbar">
               <LinkListDisplay links={trendingLinks} />
@@ -358,10 +358,10 @@ export default function Home({
         {newLinks?.length > 0 && (
           <>
             <div className="flex justify-between px-4 py-2">
-              <Link href="/see-all/new">
+              <Link href="/mapp/see-all/new">
                 <h2 className="font-bold">New</h2>
               </Link>
-              <Link href="/see-all/new">See all</Link>
+              <Link href="/mapp/see-all/new">See all</Link>
             </div>
             <div className="px-5 pb-4 overflow-auto hover:overflow-scroll no-scrollbar">
               <LinkListDisplay links={newLinks} />
