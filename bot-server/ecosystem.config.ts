@@ -6,6 +6,7 @@ module.exports = {
       interpreter: 'bun',
       interpreter_args: '--env-file=.env',
       watch: true,
+      instances: 1,
     },
   ],
 };
