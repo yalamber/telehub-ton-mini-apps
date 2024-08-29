@@ -31,7 +31,12 @@ export default function AdminPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(row),
       });
-      return response.ok ? 'success' : 'error';
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Error response:', errorData);
+        return 'error';
+      }
+      return 'success';
     } catch (error) {
       console.error('Error processing row:', error);
       return 'error';
