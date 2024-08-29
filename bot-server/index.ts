@@ -9,7 +9,7 @@ console.log('Starting bot...');
 bot.command('start', (ctx) => {
   console.log('start commant received', ctx.from);
   const message = 'Open our mini app to browse interesting channels';
-  const websiteUrl = 'https://t.me/TeleHubListBot?startapp=TeleHubList';
+  const websiteUrl = 'https://t.me/TeleHubListBot/start?startapp=TeleHubList';
   ctx.reply(message, {
     parse_mode: 'Markdown',
     reply_markup: {
