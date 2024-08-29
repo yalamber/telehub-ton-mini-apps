@@ -1,9 +1,10 @@
 'use client';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import Papa from 'papaparse';
 
 export default function AdminPage() {
   const [csvData, setCsvData] = useState<any[]>([]);
+  const processingRef = useRef(false);
 
   const handleFileUpload = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -11,14 +12,10 @@ export default function AdminPage() {
       Papa.parse(file, {
         header: true,
         skipEmptyLines: true,
-        step: function (row: any) {
-          setCsvData((prevData) => [
-            ...prevData,
-            { ...row.data, _status: 'pending' }, // Add a temporary _status field
-          ]);
-        },
-        complete: function () {
-          console.log('CSV file processing completed.');
+        complete: function (results) {
+          setCsvData(results.data.map(row => 
+            typeof row === 'object' && row !== null ? { ...row, _status: 'pending' } : { _status: 'error' }
+          ));
         },
       });
     }
@@ -45,6 +42,9 @@ export default function AdminPage() {
 
   useEffect(() => {
     const processRowsSequentially = async () => {
+      if (processingRef.current) return;
+      processingRef.current = true;
+
       for (let i = 0; i < csvData.length; i++) {
         if (csvData[i]._status === 'pending') {
           const status = await processRow(csvData[i], i);
@@ -55,6 +55,8 @@ export default function AdminPage() {
           );
         }
       }
+
+      processingRef.current = false;
     };
 
     if (csvData.length > 0) {
